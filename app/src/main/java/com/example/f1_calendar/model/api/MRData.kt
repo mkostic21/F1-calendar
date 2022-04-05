@@ -1,7 +1,10 @@
-package com.example.f1_calendar.model
+package com.example.f1_calendar.model.api
+
+import com.google.gson.annotations.SerializedName
 
 data class MRData(
-    val RaceTable: RaceTable,
+    @SerializedName("RaceTable")
+    val raceTable: RaceTable,
     val limit: String,
     val offset: String,
     val series: String,
