@@ -7,7 +7,9 @@ import com.example.f1_calendar.model.api.SecondPractice
 import com.example.f1_calendar.model.api.Sprint
 import com.example.f1_calendar.model.domain.*
 import io.reactivex.rxjava3.core.Single
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class F1ApiRaceTableRepository(
     private val f1Api: F1Api,
@@ -26,6 +28,7 @@ class F1ApiRaceTableRepository(
         for (race in raceTable.Races)
             domainRaces.add(
                 Race(
+                    eventType = "Race",
                     circuit = mapCircuit(race.Circuit),
                     firstPractice = mapFirstPractice(race.FirstPractice),
                     secondPractice = mapSecondPractice(race.SecondPractice),
@@ -41,36 +44,37 @@ class F1ApiRaceTableRepository(
     }
 
 
-    private fun mapSprint(sprint: Sprint): com.example.f1_calendar.model.domain.Sprint {
-        return com.example.f1_calendar.model.domain.Sprint(
-            date = sprint.date,
-            time = sprint.time
-        )
+    private fun mapSprint(sprint: Sprint?): com.example.f1_calendar.model.domain.Sprint? {
+        return if (sprint != null) Sprint(
+            eventType = "Sprint",
+            parseDateTime(sprint.date, sprint.time)
+        ) else null
+
     }
 
     private fun mapQualifying(qualifying: Qualifying): com.example.f1_calendar.model.domain.Qualifying {
-        return com.example.f1_calendar.model.domain.Qualifying(
-            date = qualifying.date,
-            time = qualifying.time
+        return Qualifying(
+            eventType = "Qualifying",
+            parseDateTime(qualifying.date, qualifying.time)
         )
     }
 
-    private fun mapThirdPractice(thirdPractice: com.example.f1_calendar.model.api.ThirdPractice): ThirdPractice {
-        return ThirdPractice(
-            date = thirdPractice.date,
-            time = thirdPractice.time
-        )
+    private fun mapThirdPractice(thirdPractice: com.example.f1_calendar.model.api.ThirdPractice?): ThirdPractice? {
+        return if (thirdPractice != null) ThirdPractice(
+            eventType = "Third Practice",
+            parseDateTime(thirdPractice.date, thirdPractice.time)
+        ) else null
     }
 
     private fun mapSecondPractice(secondPractice: SecondPractice): com.example.f1_calendar.model.domain.SecondPractice {
-        return com.example.f1_calendar.model.domain.SecondPractice(
-            date = secondPractice.date,
-            time = secondPractice.time
+        return SecondPractice(
+            eventType = "Second Practice",
+            parseDateTime(secondPractice.date, secondPractice.time)
         )
     }
 
     private fun mapCircuit(circuit: Circuit): com.example.f1_calendar.model.domain.Circuit {
-        return com.example.f1_calendar.model.domain.Circuit(
+        return Circuit(
             location = mapCircuitLocation(circuit.Location),
             circuitName = circuit.circuitName
         )
@@ -86,10 +90,16 @@ class F1ApiRaceTableRepository(
     }
 
     private fun mapFirstPractice(firstPractice: com.example.f1_calendar.model.api.FirstPractice): FirstPractice {
-        return FirstPractice(date = firstPractice.date, time = firstPractice.time)
+        return FirstPractice(
+            eventType = "First Practice",
+            parseDateTime(firstPractice.date, firstPractice.time)
+        )
     }
 
     private fun parseDateTime(date: String, time: String): ZonedDateTime {
-        return ZonedDateTime.parse(date+time) //todo: test
+        return ZonedDateTime.parse(
+            "${date}T$time",
+            DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC)
+        )
     }
 }
