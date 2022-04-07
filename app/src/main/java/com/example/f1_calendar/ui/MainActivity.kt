@@ -11,11 +11,13 @@ import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.databinding.ActivityMainBinding
 import com.example.f1_calendar.domain.F1ApiRaceTableRepository
 import com.example.f1_calendar.model.ui.MainActivityUiState
+import com.example.f1_calendar.model.ui.RaceWeekListItem
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnItemSelectedListener {
 
-   @Inject lateinit var api: F1Api
+    @Inject
+    lateinit var api: F1Api
     private lateinit var viewModel: MainActivityViewModel
     lateinit var binding: ActivityMainBinding
 
@@ -30,19 +32,27 @@ class MainActivity : AppCompatActivity() {
 
         val repository = F1ApiRaceTableRepository(api)
         val viewModelProviderFactory = MainActivityViewModelProviderFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelProviderFactory).get(MainActivityViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, viewModelProviderFactory).get(MainActivityViewModel::class.java)
 
         setupRecycler()
 
-        viewModel.uiState.observe(this
+        viewModel.uiState.observe(
+            this
         ) {
-            when(it){
+            when (it) {
                 is MainActivityUiState.Success -> {
                     adapter.submitList(it.listItems)
                     // todo: hide loader
                 }
-                is MainActivityUiState.Error -> Log.d("Response", it.t.toString()) // todo: hide loader
-                is MainActivityUiState.Loading -> Log.d("Response", "Loading...")//todo: Show loading
+                is MainActivityUiState.Error -> Log.d(
+                    "Response",
+                    it.t.toString()
+                ) // todo: hide loader
+                is MainActivityUiState.Loading -> Log.d(
+                    "Response",
+                    "Loading..."
+                )//todo: Show loading
             }
         }
 
@@ -50,8 +60,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecycler() {
         adapter = RaceCalendarRecyclerViewAdapter()
-        binding.rvRaceCalendar.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.rvRaceCalendar.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        adapter.onItemSelectedListener = this
         binding.rvRaceCalendar.adapter = adapter
+    }
+
+    override fun onHeaderItemSelected(header: RaceWeekListItem.Header) {
+        viewModel.toggleCollapsedHeader(header = header)
+        Log.d("clicked", header.toString())
     }
 
 }

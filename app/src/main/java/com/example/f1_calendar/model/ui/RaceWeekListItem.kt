@@ -8,7 +8,8 @@ sealed class RaceWeekListItem {
         val raceName:String,
         val circuitName: String,
         val country: String,
-        val dateTime: ZonedDateTime
+        val dateTime: ZonedDateTime,
+        val isCollapsed: Boolean
     ) : RaceWeekListItem() {
         override fun getDiffUtilId(): String {
             return "Header"

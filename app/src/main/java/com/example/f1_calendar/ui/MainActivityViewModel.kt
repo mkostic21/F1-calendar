@@ -18,6 +18,7 @@ class MainActivityViewModel(
     val uiState: LiveData<MainActivityUiState> get() = _uiState
 
     private var completeList: List<RaceWeekListItem> = listOf()
+    private var currentList: List<RaceWeekListItem> = listOf()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -30,17 +31,26 @@ class MainActivityViewModel(
         compositeDisposable.clear()
     }
 
-    fun toggleCollapsedHeader(position: Int) {
-        // TODO
-        //  1. Make copy of completeList
-        //  2. Delete items under header with passed id
-        //  3. Set this list to _uiState
-        val editableList: MutableList<RaceWeekListItem> = completeList.toMutableList()
-        editableList.removeAt(position + 1)
-        editableList.removeAt(position + 2)
-        editableList.removeAt(position + 3)
-        editableList.removeAt(position + 4)
+    fun toggleCollapsedHeader(header: RaceWeekListItem.Header) {
+        val editableList = currentList.toMutableList()
 
+        val position = editableList.indexOf(header)
+
+        if(!header.isCollapsed && position >= 0) {
+            editableList[position] = RaceWeekListItem.Header(
+                raceName = header.raceName,
+                circuitName = header.circuitName,
+                country = header.country,
+                dateTime = header.dateTime,
+                isCollapsed = true
+            )
+            for (i in 1..4)
+                editableList.removeAt(position + 1)
+            currentList = editableList
+
+            //update LiveData
+            _uiState.value = MainActivityUiState.Success(currentList)
+        }
     }
 
     private fun fetchUiState() {
@@ -57,7 +67,8 @@ class MainActivityViewModel(
                                 raceName = race.raceName,
                                 circuitName = race.circuit.circuitName,
                                 country = race.circuit.location.country,
-                                dateTime = race.dateTime
+                                dateTime = race.dateTime,
+                                isCollapsed = false
                             )
                         )
 
@@ -100,6 +111,9 @@ class MainActivityViewModel(
                         ))
                     }
                     // todo: set to completeList
+                    completeList = raceWeekList.toList()
+                    currentList = completeList
+
                     MainActivityUiState.Success(raceWeekList)
                 }
                 .observeOn(AndroidSchedulers.mainThread())

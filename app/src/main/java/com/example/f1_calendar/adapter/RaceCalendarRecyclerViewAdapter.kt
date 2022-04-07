@@ -9,9 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.f1_calendar.databinding.ListItemEventBinding
 import com.example.f1_calendar.databinding.ListItemHeaderBinding
 import com.example.f1_calendar.model.ui.RaceWeekListItem
+import com.example.f1_calendar.ui.OnItemSelectedListener
 
 class RaceCalendarRecyclerViewAdapter :
     ListAdapter<RaceWeekListItem, RecyclerView.ViewHolder>(DiffCallBack()) {
+
+    var onItemSelectedListener: OnItemSelectedListener? = null
 
     companion object {
         const val TYPE_UNKNOWN = 0
@@ -32,7 +35,7 @@ class RaceCalendarRecyclerViewAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return when(viewType){
+        return when (viewType) {
             TYPE_HEADER -> {
                 RaceHeaderViewHolder(ListItemHeaderBinding.inflate(layoutInflater, parent, false))
             }
@@ -47,10 +50,16 @@ class RaceCalendarRecyclerViewAdapter :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val currentData = currentList[position]
-        when(holder.itemViewType){
+        when (holder.itemViewType) {
             TYPE_HEADER -> {
                 val viewData = buildRaceViewData(currentData)
                 (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
+
+                onItemSelectedListener?.let { listener ->
+                    holder.itemView.setOnClickListener {
+                        listener.onHeaderItemSelected(header = viewData)
+                    }
+                }
             }
             TYPE_EVENT -> {
                 val viewData = buildRaceViewData(currentData)
@@ -60,7 +69,7 @@ class RaceCalendarRecyclerViewAdapter :
     }
 
     private fun buildRaceViewData(currentData: RaceWeekListItem?): RaceWeekListItem {
-        return when(currentData){
+        return when (currentData) {
             is RaceWeekListItem.Header -> currentData
             is RaceWeekListItem.Event -> currentData
             else -> throw IllegalArgumentException("not defined for type $currentData")
@@ -85,29 +94,33 @@ class RaceCalendarRecyclerViewAdapter :
     }
 }
 
-class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: RaceWeekListItem.Header){
+class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(data: RaceWeekListItem.Header) {
         binding.apply {
             headerEventType.text = data.raceName
             headerCircuitName.text = data.circuitName
+
             val millis = data.dateTime.toInstant().toEpochMilli()
             headerDate.text = DateUtils.formatDateTime(
                 binding.root.context,
                 millis,
                 DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL
             )
+            //Todo: apply dateTime formatting
             headerTime.text = data.dateTime.toLocalTime().toString()
         }
     }
+
 }
 
-class RaceEventViewHolder(private val binding: ListItemEventBinding): RecyclerView.ViewHolder(binding.root){
-    fun bind(data: RaceWeekListItem.Event){
+class RaceEventViewHolder(private val binding: ListItemEventBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(data: RaceWeekListItem.Event) {
         binding.apply {
             eventEventType.text = data.eventType
             eventDate.text = data.dateTime.toLocalDate().toString()
             eventTime.text = data.dateTime.toLocalTime().toString()
         }
-
     }
 }
