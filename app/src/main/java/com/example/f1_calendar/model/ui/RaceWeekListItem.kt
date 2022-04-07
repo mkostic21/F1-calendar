@@ -9,11 +9,21 @@ sealed class RaceWeekListItem {
         val circuitName: String,
         val country: String,
         val dateTime: ZonedDateTime
-    ) : RaceWeekListItem()
+    ) : RaceWeekListItem() {
+        override fun getDiffUtilId(): String {
+            return "Header"
+        }
+    }
 
     data class Event(
         val raceName: String,
         val eventType: String, //first practice, second practice, third practice/sprint, qualifying
         val dateTime: ZonedDateTime
-    ) : RaceWeekListItem()
+    ) : RaceWeekListItem(){
+        override fun getDiffUtilId():String {
+            return "Event"
+        }
+    }
+
+    abstract fun getDiffUtilId():String
 }

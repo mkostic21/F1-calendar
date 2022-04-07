@@ -17,6 +17,8 @@ class MainActivityViewModel(
     private val _uiState = MutableLiveData<MainActivityUiState>()
     val uiState: LiveData<MainActivityUiState> get() = _uiState
 
+    private var completeList: List<RaceWeekListItem> = listOf()
+
     private val compositeDisposable = CompositeDisposable()
 
     init {
@@ -28,6 +30,19 @@ class MainActivityViewModel(
         compositeDisposable.clear()
     }
 
+    fun toggleCollapsedHeader(position: Int) {
+        // TODO
+        //  1. Make copy of completeList
+        //  2. Delete items under header with passed id
+        //  3. Set this list to _uiState
+        val editableList: MutableList<RaceWeekListItem> = completeList.toMutableList()
+        editableList.removeAt(position + 1)
+        editableList.removeAt(position + 2)
+        editableList.removeAt(position + 3)
+        editableList.removeAt(position + 4)
+
+    }
+
     private fun fetchUiState() {
         compositeDisposable.add(
             repository.getCurrentSeasonRaceTable()
@@ -37,6 +52,7 @@ class MainActivityViewModel(
                     val raceWeekList = mutableListOf<RaceWeekListItem>()
                     for (race in raceTable.races) {
                         raceWeekList.add(
+                            //race weekend header
                             RaceWeekListItem.Header(
                                 raceName = race.raceName,
                                 circuitName = race.circuit.circuitName,
@@ -45,7 +61,7 @@ class MainActivityViewModel(
                             )
                         )
 
-                        //weekend events:
+                        //rest of weekend events:
                         raceWeekList.add(
                             RaceWeekListItem.Event(
                                 raceName = race.raceName,
@@ -83,6 +99,7 @@ class MainActivityViewModel(
                             dateTime = race.qualifying.dateTime
                         ))
                     }
+                    // todo: set to completeList
                     MainActivityUiState.Success(raceWeekList)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
