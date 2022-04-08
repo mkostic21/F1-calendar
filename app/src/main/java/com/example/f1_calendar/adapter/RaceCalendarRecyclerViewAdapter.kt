@@ -11,10 +11,8 @@ import com.example.f1_calendar.databinding.ListItemHeaderBinding
 import com.example.f1_calendar.model.ui.RaceWeekListItem
 import com.example.f1_calendar.ui.OnItemSelectedListener
 
-class RaceCalendarRecyclerViewAdapter :
+class RaceCalendarRecyclerViewAdapter (private var onItemSelectedListener: OnItemSelectedListener):
     ListAdapter<RaceWeekListItem, RecyclerView.ViewHolder>(DiffCallBack()) {
-
-    var onItemSelectedListener: OnItemSelectedListener? = null
 
     companion object {
         const val TYPE_UNKNOWN = 0
@@ -55,7 +53,7 @@ class RaceCalendarRecyclerViewAdapter :
                 val viewData = buildRaceViewData(currentData)
                 (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
 
-                onItemSelectedListener?.let { listener ->
+                onItemSelectedListener.let { listener ->
                     holder.itemView.setOnClickListener {
                         listener.onHeaderItemSelected(header = viewData)
                     }
@@ -105,10 +103,9 @@ class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
             headerDate.text = DateUtils.formatDateTime(
                 binding.root.context,
                 millis,
-                DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL
+                DateUtils.FORMAT_SHOW_DATE
             )
-            //Todo: apply dateTime formatting
-            headerTime.text = data.dateTime.toLocalTime().toString()
+            headerTime.text = DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
         }
     }
 
@@ -119,8 +116,14 @@ class RaceEventViewHolder(private val binding: ListItemEventBinding) :
     fun bind(data: RaceWeekListItem.Event) {
         binding.apply {
             eventEventType.text = data.eventType
-            eventDate.text = data.dateTime.toLocalDate().toString()
-            eventTime.text = data.dateTime.toLocalTime().toString()
+
+            val millis = data.dateTime.toInstant().toEpochMilli()
+            eventDate.text = DateUtils.formatDateTime(
+                binding.root.context,
+                millis,
+                DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL
+            )
+            eventTime.text = DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
         }
     }
 }

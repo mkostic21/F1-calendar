@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.f1_calendar.domain.RaceTableRepository
 import com.example.f1_calendar.model.ui.MainActivityUiState
 import com.example.f1_calendar.model.ui.RaceWeekListItem
+import com.example.f1_calendar.model.ui.MainActivityUiStateMapper
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -18,6 +19,7 @@ class MainActivityViewModel(
     val uiState: LiveData<MainActivityUiState> get() = _uiState
 
     private var completeList: List<RaceWeekListItem> = listOf()
+    private val headerIdToIsCollapsed: MutableMap<String, Boolean> = mutableMapOf()
     private var currentList: List<RaceWeekListItem> = listOf()
 
     private val compositeDisposable = CompositeDisposable()
@@ -35,22 +37,30 @@ class MainActivityViewModel(
         val editableList = currentList.toMutableList()
 
         val position = editableList.indexOf(header)
+        val headerUniqueId = header.id
 
-        if(!header.isCollapsed && position >= 0) {
-            editableList[position] = RaceWeekListItem.Header(
-                raceName = header.raceName,
-                circuitName = header.circuitName,
-                country = header.country,
-                dateTime = header.dateTime,
-                isCollapsed = true
-            )
-            for (i in 1..4)
-                editableList.removeAt(position + 1)
+        if (headerIdToIsCollapsed[headerUniqueId] == true) {
+            headerIdToIsCollapsed[headerUniqueId] = false
+
+            val realIndex = completeList.indexOf(header)
+
+            //restore header
+            for (i in 1..4) {
+                editableList.add(position + i, completeList[realIndex + i])
+            }
             currentList = editableList
 
-            //update LiveData
-            _uiState.value = MainActivityUiState.Success(currentList)
+        } else {
+            headerIdToIsCollapsed[headerUniqueId] = true
+
+            //collapse header
+            for (i in 1..4) {
+                editableList.removeAt(position + 1)
+            }
+            currentList = editableList
         }
+
+        _uiState.value = MainActivityUiState.Success(currentList)
     }
 
     private fun fetchUiState() {
@@ -59,59 +69,9 @@ class MainActivityViewModel(
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { raceTable ->
-                    val raceWeekList = mutableListOf<RaceWeekListItem>()
-                    for (race in raceTable.races) {
-                        raceWeekList.add(
-                            //race weekend header
-                            RaceWeekListItem.Header(
-                                raceName = race.raceName,
-                                circuitName = race.circuit.circuitName,
-                                country = race.circuit.location.country,
-                                dateTime = race.dateTime,
-                                isCollapsed = false
-                            )
-                        )
+                    val raceWeekList = MainActivityUiStateMapper.mapRaceWeekList(raceTable = raceTable)
 
-                        //rest of weekend events:
-                        raceWeekList.add(
-                            RaceWeekListItem.Event(
-                                raceName = race.raceName,
-                                eventType = race.firstPractice.eventType,
-                                dateTime = race.firstPractice.dateTime
-                            )
-                        )
-                        raceWeekList.add(
-                            RaceWeekListItem.Event(
-                                raceName = race.raceName,
-                                eventType = race.secondPractice.eventType,
-                                dateTime = race.secondPractice.dateTime
-                            )
-                        )
-                        if (race.sprint == null) {
-                            raceWeekList.add(
-                                RaceWeekListItem.Event(
-                                    raceName = race.raceName,
-                                    eventType = race.thirdPractice!!.eventType,
-                                    dateTime = race.thirdPractice.dateTime!!
-                                )
-                            )
-                        } else {
-                            raceWeekList.add(
-                                RaceWeekListItem.Event(
-                                    raceName = race.raceName,
-                                    eventType = race.sprint.eventType,
-                                    dateTime = race.sprint.dateTime!!
-                                )
-                            )
-                        }
-                        raceWeekList.add(RaceWeekListItem.Event(
-                            raceName = race.raceName,
-                            eventType = race.qualifying.eventType,
-                            dateTime = race.qualifying.dateTime
-                        ))
-                    }
-                    // todo: set to completeList
-                    completeList = raceWeekList.toList()
+                    completeList = raceWeekList
                     currentList = completeList
 
                     MainActivityUiState.Success(raceWeekList)

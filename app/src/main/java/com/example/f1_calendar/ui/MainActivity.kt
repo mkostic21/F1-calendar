@@ -59,10 +59,9 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
     }
 
     private fun setupRecycler() {
-        adapter = RaceCalendarRecyclerViewAdapter()
+        adapter = RaceCalendarRecyclerViewAdapter(this)
         binding.rvRaceCalendar.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        adapter.onItemSelectedListener = this
         binding.rvRaceCalendar.adapter = adapter
     }
 
