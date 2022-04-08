@@ -8,10 +8,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.f1_calendar.databinding.ListItemEventBinding
 import com.example.f1_calendar.databinding.ListItemHeaderBinding
-import com.example.f1_calendar.model.ui.RaceWeekListItem
-import com.example.f1_calendar.ui.OnItemSelectedListener
+import com.example.f1_calendar.model.ui.race_list.RaceWeekListItem
+import com.example.f1_calendar.ui.fragments.race_list.OnEventItemSelectedListener
+import com.example.f1_calendar.ui.fragments.race_list.OnHeaderItemSelectedListener
 
-class RaceCalendarRecyclerViewAdapter (private var onItemSelectedListener: OnItemSelectedListener):
+class RaceListRecyclerViewAdapter(
+    private var onHeaderItemSelectedListener: OnHeaderItemSelectedListener,
+    private val onEventItemSelectedListener: OnEventItemSelectedListener
+) :
     ListAdapter<RaceWeekListItem, RecyclerView.ViewHolder>(DiffCallBack()) {
 
     companion object {
@@ -53,7 +57,7 @@ class RaceCalendarRecyclerViewAdapter (private var onItemSelectedListener: OnIte
                 val viewData = buildRaceViewData(currentData)
                 (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
 
-                onItemSelectedListener.let { listener ->
+                onHeaderItemSelectedListener.let { listener ->
                     holder.itemView.setOnClickListener {
                         listener.onHeaderItemSelected(header = viewData)
                     }
@@ -62,6 +66,12 @@ class RaceCalendarRecyclerViewAdapter (private var onItemSelectedListener: OnIte
             TYPE_EVENT -> {
                 val viewData = buildRaceViewData(currentData)
                 (holder as RaceEventViewHolder).bind(data = viewData as RaceWeekListItem.Event)
+
+                onEventItemSelectedListener.let { listener ->
+                    holder.itemView.setOnClickListener {
+                        listener.onEventItemSelected(event = viewData)
+                    }
+                }
             }
         }
     }
@@ -105,7 +115,8 @@ class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
                 millis,
                 DateUtils.FORMAT_SHOW_DATE
             )
-            headerTime.text = DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
+            headerTime.text =
+                DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
         }
     }
 
@@ -123,7 +134,8 @@ class RaceEventViewHolder(private val binding: ListItemEventBinding) :
                 millis,
                 DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL
             )
-            eventTime.text = DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
+            eventTime.text =
+                DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
         }
     }
 }

@@ -1,22 +1,22 @@
-package com.example.f1_calendar.ui
+package com.example.f1_calendar.ui.fragments.race_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.f1_calendar.domain.RaceTableRepository
-import com.example.f1_calendar.model.ui.MainActivityUiState
-import com.example.f1_calendar.model.ui.RaceWeekListItem
-import com.example.f1_calendar.model.ui.MainActivityUiStateMapper
+import com.example.f1_calendar.model.ui.race_list.RaceListFragmentUiState
+import com.example.f1_calendar.model.ui.race_list.RaceListFragmentUiStateMapper
+import com.example.f1_calendar.model.ui.race_list.RaceWeekListItem
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class MainActivityViewModel(
+class RaceListViewModel(
     private val repository: RaceTableRepository
 ) : ViewModel() {
-    private val _uiState = MutableLiveData<MainActivityUiState>()
-    val uiState: LiveData<MainActivityUiState> get() = _uiState
+    private val _uiState = MutableLiveData<RaceListFragmentUiState>()
+    val uiState: LiveData<RaceListFragmentUiState> get() = _uiState
 
     private var completeList: List<RaceWeekListItem> = listOf()
     private val headerIdToIsCollapsed: MutableMap<String, Boolean> = mutableMapOf()
@@ -35,7 +35,6 @@ class MainActivityViewModel(
 
     fun toggleCollapsedHeader(header: RaceWeekListItem.Header) {
         val editableList = currentList.toMutableList()
-
         val position = editableList.indexOf(header)
         val headerUniqueId = header.id
 
@@ -60,7 +59,7 @@ class MainActivityViewModel(
             currentList = editableList
         }
 
-        _uiState.value = MainActivityUiState.Success(currentList)
+        _uiState.value = RaceListFragmentUiState.Success(currentList)
     }
 
     private fun fetchUiState() {
@@ -69,23 +68,22 @@ class MainActivityViewModel(
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { raceTable ->
-                    val raceWeekList = MainActivityUiStateMapper.mapRaceWeekList(raceTable = raceTable)
-
+                    val raceWeekList = RaceListFragmentUiStateMapper.mapRaceWeekList(raceTable = raceTable)
                     completeList = raceWeekList
                     currentList = completeList
 
-                    MainActivityUiState.Success(raceWeekList)
+                    RaceListFragmentUiState.Success(raceWeekList)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    _uiState.value = MainActivityUiState.Loading
+                    _uiState.value = RaceListFragmentUiState.Loading
                 }
                 .subscribeBy(
                     onSuccess = { uiStateSuccess ->
                         _uiState.value = uiStateSuccess
                     },
                     onError = { t ->
-                        _uiState.value = MainActivityUiState.Error(t)
+                        _uiState.value = RaceListFragmentUiState.Error(t)
                     }
                 )
         )

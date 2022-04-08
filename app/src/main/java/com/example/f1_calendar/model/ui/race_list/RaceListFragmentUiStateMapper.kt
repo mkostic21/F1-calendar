@@ -1,9 +1,9 @@
-package com.example.f1_calendar.model.ui
+package com.example.f1_calendar.model.ui.race_list
 
 import com.example.f1_calendar.model.domain.RaceTable
 import java.util.*
 
-object MainActivityUiStateMapper {
+object RaceListFragmentUiStateMapper {
     fun mapRaceWeekList(raceTable: RaceTable): MutableList<RaceWeekListItem>{
         val raceWeekList = mutableListOf<RaceWeekListItem>()
         for (race in raceTable.races) {
@@ -31,7 +31,6 @@ object MainActivityUiStateMapper {
                     dateTime = race.secondPractice.dateTime
                 )
             )
-            //third Event is always Sprint or Third Practice
             if (race.sprint == null) {
                 raceWeekList.add(
                     RaceWeekListItem.Event(

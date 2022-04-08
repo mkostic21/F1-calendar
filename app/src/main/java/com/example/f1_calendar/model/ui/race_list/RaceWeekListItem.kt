@@ -1,4 +1,4 @@
-package com.example.f1_calendar.model.ui
+package com.example.f1_calendar.model.ui.race_list
 
 import java.time.ZonedDateTime
 
