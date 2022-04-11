@@ -17,7 +17,8 @@ import com.example.f1_calendar.model.ui.race_list.RaceListFragmentUiState
 import com.example.f1_calendar.model.ui.race_list.RaceWeekListItem
 import javax.inject.Inject
 
-class RaceListFragment: Fragment(R.layout.fragment_race_list), OnHeaderItemSelectedListener, OnEventItemSelectedListener {
+class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSelectedListener,
+    OnEventItemSelectedListener {
 
     @Inject
     lateinit var api: F1Api
@@ -45,24 +46,36 @@ class RaceListFragment: Fragment(R.layout.fragment_race_list), OnHeaderItemSelec
             when (it) {
                 is RaceListFragmentUiState.Success -> {
                     adapter.submitList(it.listItems)
-                    // todo: hide loader
+                    hideProgressBar()
                 }
-                is RaceListFragmentUiState.Error -> Log.d(
-                    "Response",
-                    it.t.toString()
-                ) // todo: hide loader
-                is RaceListFragmentUiState.Loading -> Log.d(
-                    "Response",
-                    "Loading..."
-                )//todo: Show loading
+                is RaceListFragmentUiState.Error -> {
+                    Log.d("Response", it.t.toString())
+                    hideProgressBar()
+                }
+                is RaceListFragmentUiState.Loading -> {
+                    Log.d("Response", "Loading...")
+                    showProgressBar()
+                }
             }
         }
+    }
+
+    private fun showProgressBar() {
+        Log.d("Response", "Showing progressbar")
+        binding.progressCircular.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        Log.d("Response", "Hiding progressbar")
+        binding.progressCircular.visibility = View.GONE
+
     }
 
     private fun setupRecyclerView() {
         adapter = RaceListRecyclerViewAdapter(this, this)
         binding.rvRaceList.adapter = adapter
-        binding.rvRaceList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.rvRaceList.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
     }
 

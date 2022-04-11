@@ -68,11 +68,9 @@ class RaceListViewModel(
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { raceTable ->
-                    val raceWeekList = RaceListFragmentUiStateMapper.mapRaceWeekList(raceTable = raceTable)
-                    completeList = raceWeekList
+                    completeList = RaceListFragmentUiStateMapper.mapRaceWeekList(raceTable = raceTable)
                     currentList = completeList
-
-                    RaceListFragmentUiState.Success(raceWeekList)
+                    RaceListFragmentUiState.Success(completeList)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
