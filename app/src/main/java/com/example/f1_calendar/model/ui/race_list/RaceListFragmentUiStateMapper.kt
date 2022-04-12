@@ -21,14 +21,16 @@ object RaceListFragmentUiStateMapper {
                 RaceWeekListItem.Event(
                     raceName = race.raceName,
                     eventType = race.firstPractice.eventType,
-                    dateTime = race.firstPractice.dateTime
+                    dateTime = race.firstPractice.dateTime,
+                    circuitId = race.circuit.circuitId
                 )
             )
             raceWeekList.add(
                 RaceWeekListItem.Event(
                     raceName = race.raceName,
                     eventType = race.secondPractice.eventType,
-                    dateTime = race.secondPractice.dateTime
+                    dateTime = race.secondPractice.dateTime,
+                    circuitId = race.circuit.circuitId
                 )
             )
             if (race.sprint == null) {
@@ -36,7 +38,8 @@ object RaceListFragmentUiStateMapper {
                     RaceWeekListItem.Event(
                         raceName = race.raceName,
                         eventType = race.thirdPractice!!.eventType,
-                        dateTime = race.thirdPractice.dateTime!!
+                        dateTime = race.thirdPractice.dateTime!!,
+                        circuitId = race.circuit.circuitId
                     )
                 )
             } else {
@@ -44,7 +47,8 @@ object RaceListFragmentUiStateMapper {
                     RaceWeekListItem.Event(
                         raceName = race.raceName,
                         eventType = race.sprint.eventType,
-                        dateTime = race.sprint.dateTime!!
+                        dateTime = race.sprint.dateTime!!,
+                        circuitId = race.circuit.circuitId
                     )
                 )
             }
@@ -52,7 +56,8 @@ object RaceListFragmentUiStateMapper {
                 RaceWeekListItem.Event(
                     raceName = race.raceName,
                     eventType = race.qualifying.eventType,
-                    dateTime = race.qualifying.dateTime
+                    dateTime = race.qualifying.dateTime,
+                    circuitId = race.circuit.circuitId
                 )
             )
         }

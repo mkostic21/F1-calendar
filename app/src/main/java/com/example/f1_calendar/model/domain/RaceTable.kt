@@ -22,7 +22,9 @@ data class Race(
 
 data class Circuit(
     val location: Location,
-    val circuitName: String
+    val circuitId: String,
+    val circuitName: String,
+    val url: String
 )
 
 data class Location(

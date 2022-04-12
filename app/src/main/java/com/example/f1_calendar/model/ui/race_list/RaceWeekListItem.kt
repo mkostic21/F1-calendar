@@ -19,7 +19,8 @@ sealed class RaceWeekListItem {
     data class Event(
         val raceName: String,
         val eventType: String,
-        val dateTime: ZonedDateTime
+        val dateTime: ZonedDateTime,
+        val circuitId: String
     ) : RaceWeekListItem(){
         override fun getDiffUtilId():String {
             return "Event-$dateTime"

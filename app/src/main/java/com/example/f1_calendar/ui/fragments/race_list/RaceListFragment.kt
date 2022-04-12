@@ -86,7 +86,8 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSele
 
     override fun onEventItemSelected(event: RaceWeekListItem) {
         //todo: animation
-        val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment()
+        val circuitId = (event as RaceWeekListItem.Event).circuitId
+        val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(circuitId)
         findNavController().navigate(action)
     }
 }

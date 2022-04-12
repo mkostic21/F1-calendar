@@ -8,6 +8,6 @@ class RaceListViewModelProviderFactory(
     private val repository: RaceTableRepository
 ):ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return RaceListViewModel(repository) as T
+        return RaceListViewModel(repository = repository) as T
     }
 }

@@ -1,6 +1,7 @@
 package com.example.f1_calendar.domain
 
 import com.example.f1_calendar.api.F1Api
+import com.example.f1_calendar.model.domain.Circuit
 import com.example.f1_calendar.model.domain.RaceTable
 import io.reactivex.rxjava3.core.Single
 
@@ -16,4 +17,12 @@ class F1ApiRaceTableRepository(
             )
         }
     }
+
+    override fun getCircuit(circuitId: String): Single<Circuit> {
+        return f1Api.getCurrentSeasonData().map { response ->
+            F1ApiDomainMapper.mapCircuit(response.MRData.raceTable.Races, circuitId)!!
+        }
+    }
+
+
 }
