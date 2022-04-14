@@ -21,30 +21,31 @@ class DetailsViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
 
     fun fetchUiState(circuitId: String) {
-        compositeDisposable.add(
-            repository.getCircuit(circuitId = circuitId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.computation())
-                .map { circuit ->
-                    DetailsFragmentUiState.Success(
-                        lat = DetailsFragmentUiStateMapper.mapLat(circuit = circuit),
-                        long = DetailsFragmentUiStateMapper.mapLong(circuit = circuit),
-                        url = DetailsFragmentUiStateMapper.mapUrl(circuit = circuit)
-                    )
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    _uiState.value = DetailsFragmentUiState.Loading
-                }
-                .subscribeBy(
-                    onSuccess = { uiStateSuccess ->
-                        _uiState.value = uiStateSuccess
-                    },
-                    onError = { t ->
-                        _uiState.value = DetailsFragmentUiState.Error(t)
-                    }
+        val disposable = repository.getCircuit(circuitId = circuitId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .map { circuit ->
+                DetailsFragmentUiState.Success(
+                    lat = DetailsFragmentUiStateMapper.mapLat(circuit = circuit),
+                    long = DetailsFragmentUiStateMapper.mapLong(circuit = circuit),
+                    url = DetailsFragmentUiStateMapper.mapUrl(circuit = circuit)
                 )
-        )
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                _uiState.value = DetailsFragmentUiState.Loading
+            }
+            .subscribeBy(
+                onSuccess = { uiStateSuccess ->
+                    _uiState.value = uiStateSuccess
+                },
+                onError = { t ->
+                    _uiState.value = DetailsFragmentUiState.Error(t)
+                }
+            )
+
+
+        compositeDisposable.add(disposable)
     }
 
     fun getLocation(): Location {

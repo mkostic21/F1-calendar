@@ -34,14 +34,14 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSele
 
         setupRecyclerView()
 
-        viewModel.uiState.observe(viewLifecycleOwner) {
-            when (it) {
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is RaceListFragmentUiState.Success -> {
-                    adapter.submitList(it.listItems)
+                    adapter.submitList(state.listItems)
                     hideProgressBar()
                 }
                 is RaceListFragmentUiState.Error -> {
-                    Log.d("Response", it.t.toString())
+                    Log.d("Response", state.t.toString())
                     hideProgressBar()
                 }
                 is RaceListFragmentUiState.Loading -> {

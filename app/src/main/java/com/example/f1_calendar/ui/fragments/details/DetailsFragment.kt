@@ -36,13 +36,13 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
         viewModel.fetchUiState(circuitId = args.circuitId)
         binding.map.onCreate(savedInstanceState)
 
-        viewModel.uiState.observe(viewLifecycleOwner){
-            when (it) {
+        viewModel.uiState.observe(viewLifecycleOwner){ state ->
+            when (state) {
                 is DetailsFragmentUiState.Success -> {
                     binding.map.getMapAsync(this)
                 }
                 is DetailsFragmentUiState.Error -> {
-                    Log.d("Response", it.t.toString())
+                    Log.d("Response", state.t.toString())
                 }
                 is DetailsFragmentUiState.Loading -> {
                     Log.d("Response", "Loading...")

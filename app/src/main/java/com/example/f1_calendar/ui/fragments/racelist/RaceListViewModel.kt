@@ -64,27 +64,26 @@ class RaceListViewModel @Inject constructor(
     }
 
     private fun fetchUiState() {
-        compositeDisposable.add(
-            repository.getCurrentSeasonRaceTable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.computation())
-                .map { raceTable ->
-                    completeList = RaceListFragmentUiStateMapper.mapRaceWeekList(raceTable = raceTable)
-                    currentList = completeList
-                    RaceListFragmentUiState.Success(completeList)
+        val disposable = repository.getCurrentSeasonRaceTable()
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .map { raceTable ->
+                completeList = RaceListFragmentUiStateMapper.mapRaceWeekList(raceTable = raceTable)
+                currentList = completeList
+                RaceListFragmentUiState.Success(completeList)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                _uiState.value = RaceListFragmentUiState.Loading
+            }
+            .subscribeBy(
+                onSuccess = { uiStateSuccess ->
+                    _uiState.value = uiStateSuccess
+                },
+                onError = { t ->
+                    _uiState.value = RaceListFragmentUiState.Error(t)
                 }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    _uiState.value = RaceListFragmentUiState.Loading
-                }
-                .subscribeBy(
-                    onSuccess = { uiStateSuccess ->
-                        _uiState.value = uiStateSuccess
-                    },
-                    onError = { t ->
-                        _uiState.value = RaceListFragmentUiState.Error(t)
-                    }
-                )
-        )
+            )
+        compositeDisposable.add(disposable)
     }
 }
