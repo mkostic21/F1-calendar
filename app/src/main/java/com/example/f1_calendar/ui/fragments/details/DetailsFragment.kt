@@ -6,13 +6,12 @@ import android.util.Log
 import android.view.View
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.f1_calendar.F1Application
 import com.example.f1_calendar.R
-import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.databinding.FragmentDetailsBinding
-import com.example.f1_calendar.domain.F1ApiRaceTableRepository
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -22,24 +21,19 @@ import com.google.android.gms.maps.model.MarkerOptions
 import javax.inject.Inject
 
 class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback {
-
     @Inject
-    lateinit var api: F1Api
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: DetailsViewModel by viewModels { viewModelFactory }
 
     private lateinit var binding: FragmentDetailsBinding
-    private lateinit var viewModel: DetailsViewModel
     private val args: DetailsFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity?.application as F1Application).f1Component.inject(this)
-
         binding = FragmentDetailsBinding.bind(view)
 
-        val repository = F1ApiRaceTableRepository(f1Api = api)
-        val viewModelProviderFactory = DetailsViewModelProviderFactory(repository = repository, args.circuitId)
-        viewModel = ViewModelProvider(this, viewModelProviderFactory).get(DetailsViewModel::class.java)
-
+        viewModel.fetchUiState(circuitId = args.circuitId)
         binding.map.onCreate(savedInstanceState)
 
         viewModel.uiState.observe(viewLifecycleOwner){
@@ -55,7 +49,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
                 }
             }
         }
-
 
         binding.btnMoreInfo.setOnClickListener {
             val builder = CustomTabsIntent.Builder()

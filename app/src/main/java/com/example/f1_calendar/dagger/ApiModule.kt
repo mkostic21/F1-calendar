@@ -1,6 +1,8 @@
 package com.example.f1_calendar.dagger
 
 import com.example.f1_calendar.api.F1Api
+import com.example.f1_calendar.domain.F1ApiRaceTableRepository
+import com.example.f1_calendar.domain.RaceTableRepository
 import com.example.f1_calendar.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -25,6 +27,12 @@ class ApiModule {
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun providesRepository(api: F1Api): RaceTableRepository{
+        return F1ApiRaceTableRepository(api)
     }
 
 }

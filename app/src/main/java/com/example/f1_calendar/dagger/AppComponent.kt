@@ -1,5 +1,6 @@
 package com.example.f1_calendar.dagger
 
+import com.example.f1_calendar.dagger.viewmodel.ViewModelModule
 import com.example.f1_calendar.ui.fragments.details.DetailsFragment
 import com.example.f1_calendar.ui.fragments.racelist.RaceListFragment
 import dagger.Component
@@ -10,11 +11,11 @@ import javax.inject.Singleton
     modules =
     [
         AppModule::class,
-        ApiModule::class
+        ApiModule::class,
+        ViewModelModule::class
     ]
 )
 interface AppComponent {
-
     fun inject(raceListFragment: RaceListFragment)
     fun inject(detailsFragment: DetailsFragment)
 }

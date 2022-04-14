@@ -4,43 +4,35 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.f1_calendar.F1Application
 import com.example.f1_calendar.R
 import com.example.f1_calendar.adapter.RaceListRecyclerViewAdapter
-import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.databinding.FragmentRaceListBinding
-import com.example.f1_calendar.domain.F1ApiRaceTableRepository
 import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiState
 import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
 import javax.inject.Inject
 
 class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSelectedListener,
     OnEventItemSelectedListener {
-
     @Inject
-    lateinit var api: F1Api
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: RaceListViewModel by viewModels { viewModelFactory }
 
     private lateinit var binding: FragmentRaceListBinding
-    private lateinit var adapter: RaceListRecyclerViewAdapter
-    private lateinit var viewModel: RaceListViewModel
+    private val adapter: RaceListRecyclerViewAdapter by lazy {
+        RaceListRecyclerViewAdapter(this, this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity?.application as F1Application).f1Component.inject(this)
-
         binding = FragmentRaceListBinding.bind(view)
 
-        val repository = F1ApiRaceTableRepository(api)
-        val viewModelProviderFactory = RaceListViewModelProviderFactory(repository)
-        viewModel =
-            ViewModelProvider(this, viewModelProviderFactory).get(RaceListViewModel::class.java)
-
-
         setupRecyclerView()
-
 
         viewModel.uiState.observe(viewLifecycleOwner) {
             when (it) {
@@ -72,13 +64,10 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSele
     }
 
     private fun setupRecyclerView() {
-        adapter = RaceListRecyclerViewAdapter(this, this)
         binding.rvRaceList.adapter = adapter
         binding.rvRaceList.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
     }
-
 
     override fun onHeaderItemSelected(header: RaceWeekListItem.Header) {
         viewModel.toggleCollapsedHeader(header = header)

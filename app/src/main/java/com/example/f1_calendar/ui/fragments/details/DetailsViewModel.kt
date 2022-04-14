@@ -11,20 +11,18 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class DetailsViewModel(private val repository: RaceTableRepository, private val circuitId: String) : ViewModel() {
+class DetailsViewModel @Inject constructor(
+    private val repository: RaceTableRepository
+) : ViewModel() {
     private val _uiState = MutableLiveData<DetailsFragmentUiState>()
     val uiState: LiveData<DetailsFragmentUiState> get() = _uiState
-
     private val compositeDisposable = CompositeDisposable()
 
-    init {
-        fetchUiState()
-    }
-
-    private fun fetchUiState() {
+    fun fetchUiState(circuitId: String) {
         compositeDisposable.add(
-            repository.getCircuit(circuitId)
+            repository.getCircuit(circuitId = circuitId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { circuit ->
@@ -58,8 +56,14 @@ class DetailsViewModel(private val repository: RaceTableRepository, private val 
             locality = ""
         )
     }
+
     fun getUrl(): String {
         val state = _uiState.value as DetailsFragmentUiState.Success
         return state.url
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 }

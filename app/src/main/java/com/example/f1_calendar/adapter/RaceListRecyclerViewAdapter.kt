@@ -15,8 +15,7 @@ import com.example.f1_calendar.ui.fragments.racelist.OnHeaderItemSelectedListene
 class RaceListRecyclerViewAdapter(
     private val onHeaderItemSelectedListener: OnHeaderItemSelectedListener,
     private val onEventItemSelectedListener: OnEventItemSelectedListener
-) :
-    ListAdapter<RaceWeekListItem, RecyclerView.ViewHolder>(DiffCallBack()) {
+) : ListAdapter<RaceWeekListItem, RecyclerView.ViewHolder>(DiffCallBack()) {
 
     companion object {
         const val TYPE_UNKNOWN = 0
