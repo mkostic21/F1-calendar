@@ -1,4 +1,4 @@
-package com.example.f1_calendar.model.ui.race_list
+package com.example.f1_calendar.model.ui.racelist
 
 import com.example.f1_calendar.model.domain.RaceTable
 import java.util.*

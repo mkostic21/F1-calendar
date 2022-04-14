@@ -1,4 +1,4 @@
-package com.example.f1_calendar.ui.fragments.race_list
+package com.example.f1_calendar.ui.fragments.racelist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

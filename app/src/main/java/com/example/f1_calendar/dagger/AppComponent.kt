@@ -1,7 +1,7 @@
 package com.example.f1_calendar.dagger
 
 import com.example.f1_calendar.ui.fragments.details.DetailsFragment
-import com.example.f1_calendar.ui.fragments.race_list.RaceListFragment
+import com.example.f1_calendar.ui.fragments.racelist.RaceListFragment
 import dagger.Component
 import javax.inject.Singleton
 

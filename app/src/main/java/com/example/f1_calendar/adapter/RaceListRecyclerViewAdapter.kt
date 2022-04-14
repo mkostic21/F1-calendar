@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.f1_calendar.databinding.ListItemEventBinding
 import com.example.f1_calendar.databinding.ListItemHeaderBinding
-import com.example.f1_calendar.model.ui.race_list.RaceWeekListItem
-import com.example.f1_calendar.ui.fragments.race_list.OnEventItemSelectedListener
-import com.example.f1_calendar.ui.fragments.race_list.OnHeaderItemSelectedListener
+import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
+import com.example.f1_calendar.ui.fragments.racelist.OnEventItemSelectedListener
+import com.example.f1_calendar.ui.fragments.racelist.OnHeaderItemSelectedListener
 
 class RaceListRecyclerViewAdapter(
-    private var onHeaderItemSelectedListener: OnHeaderItemSelectedListener,
+    private val onHeaderItemSelectedListener: OnHeaderItemSelectedListener,
     private val onEventItemSelectedListener: OnEventItemSelectedListener
 ) :
     ListAdapter<RaceWeekListItem, RecyclerView.ViewHolder>(DiffCallBack()) {
@@ -57,20 +57,16 @@ class RaceListRecyclerViewAdapter(
                 val viewData = buildRaceViewData(currentData)
                 (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
 
-                onHeaderItemSelectedListener.let { listener ->
-                    holder.itemView.setOnClickListener {
-                        listener.onHeaderItemSelected(header = viewData)
-                    }
+                holder.itemView.setOnClickListener {
+                    onHeaderItemSelectedListener.onHeaderItemSelected(header = viewData)
                 }
             }
             TYPE_EVENT -> {
                 val viewData = buildRaceViewData(currentData)
                 (holder as RaceEventViewHolder).bind(data = viewData as RaceWeekListItem.Event)
 
-                onEventItemSelectedListener.let { listener ->
-                    holder.itemView.setOnClickListener {
-                        listener.onEventItemSelected(event = viewData)
-                    }
+                holder.itemView.setOnClickListener {
+                    onEventItemSelectedListener.onEventItemSelected(event = viewData)
                 }
             }
         }
@@ -105,7 +101,7 @@ class RaceListRecyclerViewAdapter(
 class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(data: RaceWeekListItem.Header) {
-        binding.apply {
+        binding.run {
             headerEventType.text = data.raceName
             headerCircuitName.text = data.circuitName
 
@@ -125,7 +121,7 @@ class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
 class RaceEventViewHolder(private val binding: ListItemEventBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(data: RaceWeekListItem.Event) {
-        binding.apply {
+        binding.run {
             eventEventType.text = data.eventType
 
             val millis = data.dateTime.toInstant().toEpochMilli()

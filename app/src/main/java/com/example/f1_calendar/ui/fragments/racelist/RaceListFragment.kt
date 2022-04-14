@@ -1,4 +1,4 @@
-package com.example.f1_calendar.ui.fragments.race_list
+package com.example.f1_calendar.ui.fragments.racelist
 
 import android.os.Bundle
 import android.util.Log
@@ -13,8 +13,8 @@ import com.example.f1_calendar.adapter.RaceListRecyclerViewAdapter
 import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.databinding.FragmentRaceListBinding
 import com.example.f1_calendar.domain.F1ApiRaceTableRepository
-import com.example.f1_calendar.model.ui.race_list.RaceListFragmentUiState
-import com.example.f1_calendar.model.ui.race_list.RaceWeekListItem
+import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiState
+import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
 import javax.inject.Inject
 
 class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSelectedListener,

@@ -1,12 +1,12 @@
-package com.example.f1_calendar.ui.fragments.race_list
+package com.example.f1_calendar.ui.fragments.racelist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.f1_calendar.domain.RaceTableRepository
-import com.example.f1_calendar.model.ui.race_list.RaceListFragmentUiState
-import com.example.f1_calendar.model.ui.race_list.RaceListFragmentUiStateMapper
-import com.example.f1_calendar.model.ui.race_list.RaceWeekListItem
+import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiState
+import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiStateMapper
+import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy

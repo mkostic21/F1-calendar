@@ -5,7 +5,7 @@
     app:startDestination="@id/raceListFragment">
 <fragment
         android:id="@+id/raceListFragment"
-        android:name="com.example.f1_calendar.ui.fragments.race_list.RaceListFragment"
+        android:name="com.example.f1_calendar.ui.fragments.racelist.RaceListFragment"
         android:label="RaceListFragment" >
     <action
         android:id="@+id/action_raceListFragment_to_detailsFragment"
