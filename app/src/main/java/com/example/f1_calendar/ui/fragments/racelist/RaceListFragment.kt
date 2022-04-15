@@ -69,14 +69,23 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSele
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
-    override fun onHeaderItemSelected(header: RaceWeekListItem.Header) {
+    override fun toggleHeader(header: RaceWeekListItem.Header) {
         viewModel.toggleCollapsedHeader(header = header)
     }
 
-    override fun onEventItemSelected(event: RaceWeekListItem) {
+    override fun showDetails(header: RaceWeekListItem.Header) {
         //todo: animation
-        val circuitId = (event as RaceWeekListItem.Event).circuitId
-        val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(circuitId)
+        val circuitId = header.circuitId
+        //todo: Season from number picker
+        val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(circuitId, "2022")
+        findNavController().navigate(action)
+    }
+
+    override fun showDetails(event: RaceWeekListItem.Event) {
+        //todo: animation
+        val circuitId = event.circuitId
+        //todo: Season from number picker
+        val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(circuitId, "2022")
         findNavController().navigate(action)
     }
 }

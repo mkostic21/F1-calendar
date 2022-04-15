@@ -8,6 +8,8 @@ import com.example.f1_calendar.model.domain.FirstPractice
 import com.example.f1_calendar.model.domain.Location
 import com.example.f1_calendar.model.domain.Race
 import com.example.f1_calendar.model.domain.ThirdPractice
+import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -33,9 +35,12 @@ object F1ApiDomainMapper {
         return domainRaces
     }
 
-    fun mapCircuit(races: List<com.example.f1_calendar.model.api.Race>, circuitId: String):com.example.f1_calendar.model.domain.Circuit?{
-        for (race in races){
-            if(race.Circuit.circuitId == circuitId) {
+    fun mapCircuit(
+        races: List<com.example.f1_calendar.model.api.Race>,
+        circuitId: String
+    ): com.example.f1_calendar.model.domain.Circuit? {
+        for (race in races) {
+            if (race.Circuit.circuitId == circuitId) {
                 return mapCircuit(race.Circuit)
             }
         }
@@ -50,11 +55,11 @@ object F1ApiDomainMapper {
 
     }
 
-    private fun mapQualifying(qualifying: Qualifying): com.example.f1_calendar.model.domain.Qualifying {
-        return com.example.f1_calendar.model.domain.Qualifying(
+    private fun mapQualifying(qualifying: Qualifying?): com.example.f1_calendar.model.domain.Qualifying? {
+        return if (qualifying != null) com.example.f1_calendar.model.domain.Qualifying(
             eventType = "Qualifying",
             parseDateTime(qualifying.date, qualifying.time)
-        )
+        ) else null
     }
 
     private fun mapThirdPractice(thirdPractice: com.example.f1_calendar.model.api.ThirdPractice?): ThirdPractice? {
@@ -64,11 +69,11 @@ object F1ApiDomainMapper {
         ) else null
     }
 
-    private fun mapSecondPractice(secondPractice: SecondPractice): com.example.f1_calendar.model.domain.SecondPractice {
-        return com.example.f1_calendar.model.domain.SecondPractice(
+    private fun mapSecondPractice(secondPractice: SecondPractice?): com.example.f1_calendar.model.domain.SecondPractice? {
+        return if (secondPractice != null) com.example.f1_calendar.model.domain.SecondPractice(
             eventType = "Second Practice",
             parseDateTime(secondPractice.date, secondPractice.time)
-        )
+        ) else null
     }
 
     private fun mapCircuit(circuit: Circuit): com.example.f1_calendar.model.domain.Circuit {
@@ -89,17 +94,26 @@ object F1ApiDomainMapper {
         )
     }
 
-    private fun mapFirstPractice(firstPractice: com.example.f1_calendar.model.api.FirstPractice): FirstPractice {
-        return FirstPractice(
+    private fun mapFirstPractice(firstPractice: com.example.f1_calendar.model.api.FirstPractice?): FirstPractice? {
+        return if (firstPractice != null) FirstPractice(
             eventType = "First Practice",
             parseDateTime(firstPractice.date, firstPractice.time)
-        )
+        ) else null
     }
 
-    private fun parseDateTime(date: String, time: String): ZonedDateTime {
-        return ZonedDateTime.parse(
-            "${date}T$time",
-            DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC)
-        )
+    private fun parseDateTime(date: String?, time: String?): ZonedDateTime {
+        return when {
+            time.isNullOrBlank() -> {
+                //todo: set date only
+                //ZonedDateTime.parse("${date}T00:00:00Z", DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC))
+                LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay(ZoneId.systemDefault())
+            }
+            else -> {
+                ZonedDateTime.parse(
+                    "${date}T$time",
+                    DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC)
+                )
+            }
+        }
     }
 }

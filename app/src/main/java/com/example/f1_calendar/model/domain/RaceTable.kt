@@ -10,9 +10,9 @@ data class RaceTable(
 data class Race(
     val eventType: String,
     val circuit: Circuit,
-    val firstPractice: FirstPractice,
-    val qualifying: Qualifying,
-    val secondPractice: SecondPractice,
+    val firstPractice: FirstPractice?,
+    val qualifying: Qualifying?,
+    val secondPractice: SecondPractice?,
     val sprint: Sprint?,
     val thirdPractice: ThirdPractice?,
     val dateTime: ZonedDateTime,
@@ -46,7 +46,7 @@ data class SecondPractice(
 
 data class ThirdPractice(
     val eventType: String,
-    val dateTime: ZonedDateTime?
+    val dateTime: ZonedDateTime
 )
 
 data class Qualifying(
@@ -56,5 +56,5 @@ data class Qualifying(
 
 data class Sprint(
     val eventType: String,
-    val dateTime: ZonedDateTime?
+    val dateTime: ZonedDateTime
 )

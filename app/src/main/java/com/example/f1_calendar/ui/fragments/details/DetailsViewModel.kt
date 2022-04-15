@@ -20,8 +20,8 @@ class DetailsViewModel @Inject constructor(
     val uiState: LiveData<DetailsFragmentUiState> get() = _uiState
     private val compositeDisposable = CompositeDisposable()
 
-    fun fetchUiState(circuitId: String) {
-        val disposable = repository.getCircuit(circuitId = circuitId)
+    fun fetchUiState(circuitId: String, season: String) {
+        val disposable = repository.getCircuit(season = season, circuitId = circuitId)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .map { circuit ->

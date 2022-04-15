@@ -10,8 +10,8 @@ class F1ApiRaceTableRepository @Inject constructor(
     private val f1Api: F1Api,
     // private val roomDatabase: F1Database
 ) : RaceTableRepository {
-    override fun getCurrentSeasonRaceTable(): Single<RaceTable> {
-        return f1Api.getCurrentSeasonData().map { response ->
+    override fun getRaceTable(season: String): Single<RaceTable> {
+        return f1Api.getSeasonData(season = season).map { response ->
             RaceTable(
                 races = F1ApiDomainMapper.mapRaces(response.MRData.raceTable),
                 season = response.MRData.raceTable.season
@@ -19,8 +19,8 @@ class F1ApiRaceTableRepository @Inject constructor(
         }
     }
 
-    override fun getCircuit(circuitId: String): Single<Circuit> {
-        return f1Api.getCurrentSeasonData().map { response ->
+    override fun getCircuit(season: String, circuitId: String): Single<Circuit> {
+        return f1Api.getSeasonData(season = season).map { response ->
             F1ApiDomainMapper.mapCircuit(response.MRData.raceTable.Races, circuitId)!!
         }
     }

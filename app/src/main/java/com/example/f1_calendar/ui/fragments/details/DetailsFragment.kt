@@ -33,7 +33,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
         (activity?.application as F1Application).f1Component.inject(this)
         binding = FragmentDetailsBinding.bind(view)
 
-        viewModel.fetchUiState(circuitId = args.circuitId)
+        viewModel.fetchUiState(circuitId = args.circuitId, season = args.season)
         binding.map.onCreate(savedInstanceState)
 
         viewModel.uiState.observe(viewLifecycleOwner){ state ->

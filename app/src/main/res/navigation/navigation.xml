@@ -21,5 +21,8 @@
         <argument
             android:name="circuitId"
             app:argType="string" />
+        <argument
+            android:name="season"
+            app:argType="string" />
     </fragment>
 </navigation>

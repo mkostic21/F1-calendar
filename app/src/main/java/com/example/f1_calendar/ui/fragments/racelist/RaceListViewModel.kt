@@ -64,7 +64,8 @@ class RaceListViewModel @Inject constructor(
     }
 
     private fun fetchUiState() {
-        val disposable = repository.getCurrentSeasonRaceTable()
+        //todo: get season from number picker
+        val disposable = repository.getRaceTable(season = "2022")
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .map { raceTable ->

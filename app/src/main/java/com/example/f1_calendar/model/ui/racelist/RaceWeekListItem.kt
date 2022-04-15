@@ -9,6 +9,7 @@ sealed class RaceWeekListItem {
         val circuitName: String,
         val country: String,
         val dateTime: ZonedDateTime,
+        val circuitId: String,
         val id: String
     ) : RaceWeekListItem() {
         override fun getDiffUtilId(): String {

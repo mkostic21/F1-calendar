@@ -11,6 +11,7 @@ import com.example.f1_calendar.databinding.ListItemHeaderBinding
 import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
 import com.example.f1_calendar.ui.fragments.racelist.OnEventItemSelectedListener
 import com.example.f1_calendar.ui.fragments.racelist.OnHeaderItemSelectedListener
+import java.time.LocalTime
 
 class RaceListRecyclerViewAdapter(
     private val onHeaderItemSelectedListener: OnHeaderItemSelectedListener,
@@ -56,8 +57,14 @@ class RaceListRecyclerViewAdapter(
                 val viewData = buildRaceViewData(currentData)
                 (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
 
-                holder.itemView.setOnClickListener {
-                    onHeaderItemSelectedListener.onHeaderItemSelected(header = viewData)
+                if (currentList.isNotEmpty() && currentList[1] is RaceWeekListItem.Event) {
+                    holder.itemView.setOnClickListener {
+                        onHeaderItemSelectedListener.toggleHeader(header = viewData)
+                    }
+                } else {
+                    holder.itemView.setOnClickListener {
+                        onHeaderItemSelectedListener.showDetails(header = viewData)
+                    }
                 }
             }
             TYPE_EVENT -> {
@@ -65,7 +72,7 @@ class RaceListRecyclerViewAdapter(
                 (holder as RaceEventViewHolder).bind(data = viewData as RaceWeekListItem.Event)
 
                 holder.itemView.setOnClickListener {
-                    onEventItemSelectedListener.onEventItemSelected(event = viewData)
+                    onEventItemSelectedListener.showDetails(event = viewData)
                 }
             }
         }
@@ -110,8 +117,11 @@ class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
                 millis,
                 DateUtils.FORMAT_SHOW_DATE
             )
-            headerTime.text =
-                DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
+
+            if(data.dateTime.toLocalTime() != LocalTime.MIDNIGHT){
+                headerTime.text = DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
+            }
+
         }
     }
 
@@ -124,13 +134,18 @@ class RaceEventViewHolder(private val binding: ListItemEventBinding) :
             eventEventType.text = data.eventType
 
             val millis = data.dateTime.toInstant().toEpochMilli()
-            eventDate.text = DateUtils.formatDateTime(
+            eventDate.text =
+                DateUtils.formatDateTime(
+                    binding.root.context,
+                    millis,
+                    DateUtils.FORMAT_SHOW_DATE
+                )
+
+            eventTime.text = DateUtils.formatDateTime(
                 binding.root.context,
-                millis,
-                DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL
+                millis, DateUtils.FORMAT_SHOW_TIME
             )
-            eventTime.text =
-                DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
+
         }
     }
 }

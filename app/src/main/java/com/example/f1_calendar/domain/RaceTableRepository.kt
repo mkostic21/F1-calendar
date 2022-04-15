@@ -5,6 +5,6 @@ import com.example.f1_calendar.model.domain.RaceTable
 import io.reactivex.rxjava3.core.Single
 
 interface RaceTableRepository {
-    fun getCurrentSeasonRaceTable(): Single<RaceTable>
-    fun getCircuit(circuitId: String): Single<Circuit>
+    fun getRaceTable(season: String): Single<RaceTable>
+    fun getCircuit(season: String, circuitId: String): Single<Circuit>
 }
