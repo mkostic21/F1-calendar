@@ -1,8 +1,10 @@
 package com.example.f1_calendar.dagger
 
+import android.content.Context
 import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.domain.F1ApiRaceTableRepository
 import com.example.f1_calendar.domain.RaceTableRepository
+import com.example.f1_calendar.room.F1Database
 import com.example.f1_calendar.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -31,8 +33,14 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun providesRepository(api: F1Api): RaceTableRepository{
-        return F1ApiRaceTableRepository(api)
+    fun provideRepository(api: F1Api, db: F1Database): RaceTableRepository {
+        return F1ApiRaceTableRepository(api, db)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDatabase(context: Context): F1Database {
+        return F1Database.invoke(context = context)
     }
 
 }

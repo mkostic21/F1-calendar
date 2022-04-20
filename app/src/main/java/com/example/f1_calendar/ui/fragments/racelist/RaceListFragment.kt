@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -14,6 +15,7 @@ import com.example.f1_calendar.adapter.RaceListRecyclerViewAdapter
 import com.example.f1_calendar.databinding.FragmentRaceListBinding
 import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiState
 import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
+import com.example.f1_calendar.ui.fragments.seasonpick.SeasonPickerViewModel
 import javax.inject.Inject
 
 class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSelectedListener,
@@ -21,8 +23,10 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSele
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel: RaceListViewModel by viewModels { viewModelFactory }
+    private val pickerViewModel: SeasonPickerViewModel by activityViewModels()
 
     private lateinit var binding: FragmentRaceListBinding
+
     private val adapter: RaceListRecyclerViewAdapter by lazy {
         RaceListRecyclerViewAdapter(this, this)
     }
@@ -50,6 +54,16 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSele
                 }
             }
         }
+
+        pickerViewModel.season.observe(viewLifecycleOwner){ season ->
+            viewModel.fetchUiState(season = season)
+        }
+
+        //todo: implement appbar and add button
+        binding.fabTest.setOnClickListener {
+            val action = RaceListFragmentDirections.actionRaceListFragmentToSeasonPickFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun showProgressBar() {
@@ -74,18 +88,16 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSele
     }
 
     override fun showDetails(header: RaceWeekListItem.Header) {
-        //todo: animation
+        //todo: add animation
         val circuitId = header.circuitId
-        //todo: Season from number picker
-        val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(circuitId, "2022")
+        val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(circuitId, pickerViewModel.season.value)
         findNavController().navigate(action)
     }
 
     override fun showDetails(event: RaceWeekListItem.Event) {
-        //todo: animation
+        //todo:add animation
         val circuitId = event.circuitId
-        //todo: Season from number picker
-        val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(circuitId, "2022")
+        val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(circuitId, pickerViewModel.season.value)
         findNavController().navigate(action)
     }
 }

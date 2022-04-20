@@ -3,18 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation"
     app:startDestination="@id/raceListFragment">
-<fragment
+    <fragment
         android:id="@+id/raceListFragment"
         android:name="com.example.f1_calendar.ui.fragments.racelist.RaceListFragment"
-        android:label="RaceListFragment" >
-    <action
-        android:id="@+id/action_raceListFragment_to_detailsFragment"
-        app:destination="@id/detailsFragment" />
-</fragment>
+        android:label="RaceListFragment">
+        <action
+            android:id="@+id/action_raceListFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+        <action
+            android:id="@+id/action_raceListFragment_to_seasonPickFragment"
+            app:destination="@id/seasonPickFragment" />
+    </fragment>
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.example.f1_calendar.ui.fragments.details.DetailsFragment"
-        android:label="DetailsFragment" >
+        android:label="DetailsFragment">
         <action
             android:id="@+id/action_detailsFragment_to_raceListFragment"
             app:destination="@id/raceListFragment" />
@@ -23,6 +26,16 @@
             app:argType="string" />
         <argument
             android:name="season"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/seasonPickFragment"
+        android:name="com.example.f1_calendar.ui.fragments.seasonpick.SeasonPickFragment"
+        android:label="SeasonPickFragment">
+        <action
+            android:id="@+id/action_seasonPickFragment_to_raceListFragment"
+            app:destination="@id/raceListFragment">
+        </action>
     </fragment>
 </navigation>

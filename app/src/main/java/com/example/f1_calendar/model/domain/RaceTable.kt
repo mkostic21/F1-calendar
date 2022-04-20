@@ -1,10 +1,13 @@
 package com.example.f1_calendar.model.domain
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.ZonedDateTime
 
+@Entity
 data class RaceTable(
     val races: List<Race>,
-    val season: String
+    @PrimaryKey val season: String
 )
 
 data class Race(

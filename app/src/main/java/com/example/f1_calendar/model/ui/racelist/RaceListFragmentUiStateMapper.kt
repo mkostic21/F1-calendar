@@ -18,8 +18,7 @@ object RaceListFragmentUiStateMapper {
                     id = UUID.randomUUID().toString()
                 )
             )
-            //todo: find better way to check for missing "time" in events
-            //if practice is missing or if practice doesn't have time to show -> use only HEADER items
+            //if practice is missing or if practice doesn't have time to show -> add only HEADER items
             if(race.firstPractice != null && race.firstPractice.dateTime.toLocalTime() != LocalTime.MIDNIGHT) {
                 raceWeekList.add(
                     RaceWeekListItem.Event(

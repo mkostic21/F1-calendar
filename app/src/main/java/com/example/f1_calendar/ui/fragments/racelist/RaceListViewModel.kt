@@ -19,6 +19,7 @@ class RaceListViewModel @Inject constructor(
     private val _uiState = MutableLiveData<RaceListFragmentUiState>()
     val uiState: LiveData<RaceListFragmentUiState> get() = _uiState
 
+    private var currentSeason: String = ""
     private var completeList: List<RaceWeekListItem> = listOf()
     private val headerIdToIsCollapsed: MutableMap<String, Boolean> = mutableMapOf()
     private var currentList: List<RaceWeekListItem> = listOf()
@@ -26,7 +27,7 @@ class RaceListViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
 
     init {
-        fetchUiState()
+        fetchUiState("2022")
     }
 
     override fun onCleared() {
@@ -63,28 +64,34 @@ class RaceListViewModel @Inject constructor(
         _uiState.value = RaceListFragmentUiState.Success(currentList)
     }
 
-    private fun fetchUiState() {
-        //todo: get season from number picker
-        val disposable = repository.getRaceTable(season = "2022")
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .map { raceTable ->
-                completeList = RaceListFragmentUiStateMapper.mapRaceWeekList(raceTable = raceTable)
-                currentList = completeList
-                RaceListFragmentUiState.Success(completeList)
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe {
-                _uiState.value = RaceListFragmentUiState.Loading
-            }
-            .subscribeBy(
-                onSuccess = { uiStateSuccess ->
-                    _uiState.value = uiStateSuccess
-                },
-                onError = { t ->
-                    _uiState.value = RaceListFragmentUiState.Error(t)
+    fun fetchUiState(season: String) {
+        if (season == currentSeason) {
+            return
+        } else {
+            val disposable = repository.getRaceTable(season = season)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map { raceTable ->
+                    completeList =
+                        RaceListFragmentUiStateMapper.mapRaceWeekList(raceTable = raceTable)
+                    currentList = completeList
+                    RaceListFragmentUiState.Success(completeList)
                 }
-            )
-        compositeDisposable.add(disposable)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    _uiState.value = RaceListFragmentUiState.Loading
+                }
+                .subscribeBy(
+                    onSuccess = { uiStateSuccess ->
+                        _uiState.value = uiStateSuccess
+                    },
+                    onError = { t ->
+                        _uiState.value = RaceListFragmentUiState.Error(t)
+                    }
+                )
+            compositeDisposable.add(disposable)
+
+            currentSeason = season
+        }
     }
 }

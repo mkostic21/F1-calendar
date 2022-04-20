@@ -1,6 +1,7 @@
 package com.example.f1_calendar.adapter
 
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -57,8 +58,9 @@ class RaceListRecyclerViewAdapter(
                 val viewData = buildRaceViewData(currentData)
                 (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
 
-                if (currentList.isNotEmpty() && currentList[1] is RaceWeekListItem.Event) {
+                if (hasEvents(currentList)) {
                     holder.itemView.setOnClickListener {
+                        Log.d("response", "onBindViewHolder: pressed on position: $position")
                         onHeaderItemSelectedListener.toggleHeader(header = viewData)
                     }
                 } else {
@@ -73,9 +75,20 @@ class RaceListRecyclerViewAdapter(
 
                 holder.itemView.setOnClickListener {
                     onEventItemSelectedListener.showDetails(event = viewData)
+                    Log.d("response", "onBindViewHolder: pressed on position: $position")
+
                 }
             }
         }
+    }
+
+    private fun hasEvents(currentList: List<RaceWeekListItem>): Boolean {
+        for (item in currentList) {
+            if (item is RaceWeekListItem.Event) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun buildRaceViewData(currentData: RaceWeekListItem?): RaceWeekListItem {
@@ -118,8 +131,12 @@ class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
                 DateUtils.FORMAT_SHOW_DATE
             )
 
-            if(data.dateTime.toLocalTime() != LocalTime.MIDNIGHT){
-                headerTime.text = DateUtils.formatDateTime(binding.root.context, millis, DateUtils.FORMAT_SHOW_TIME)
+            if (data.dateTime.toLocalTime() != LocalTime.MIDNIGHT) {
+                headerTime.text = DateUtils.formatDateTime(
+                    binding.root.context,
+                    millis,
+                    DateUtils.FORMAT_SHOW_TIME
+                )
             }
 
         }
