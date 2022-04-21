@@ -1,5 +1,6 @@
 package com.example.f1_calendar.domain
 
+import android.util.Log
 import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.model.domain.Circuit
 import com.example.f1_calendar.model.domain.RaceTable
@@ -19,6 +20,7 @@ class F1ApiRaceTableRepository @Inject constructor(
                 }
             }
             .onErrorResumeNext {
+                Log.d("response", "getRaceTable: ${it.localizedMessage}")
                 fetchFromApiAndSaveToDb(season = season)
             }
     }
@@ -35,6 +37,7 @@ class F1ApiRaceTableRepository @Inject constructor(
 
     private fun fetchFromApiAndSaveToDb(season: String): Single<RaceTable> {
         return f1Api.getSeasonData(season = season).map { response ->
+            Log.d("response", "fetchFromApiAndSaveToDb: from API")
             RaceTable(
                 races = F1ApiDomainMapper.mapRaces(response.MRData.raceTable),
                 season = response.MRData.raceTable.season
