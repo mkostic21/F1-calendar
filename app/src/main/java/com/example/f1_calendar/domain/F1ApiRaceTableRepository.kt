@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 class F1ApiRaceTableRepository @Inject constructor(
     private val f1Api: F1Api,
+    // todo: inject race table dao, not whole database
     private val roomDatabase: F1Database
 ) : RaceTableRepository {
     override fun getRaceTable(season: String): Single<RaceTable> {
@@ -50,4 +51,5 @@ class F1ApiRaceTableRepository @Inject constructor(
     }
 }
 
+// todo: make private
 class RacesEmptyException : RuntimeException()

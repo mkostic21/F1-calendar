@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs'
 
+    // todo: be consistent (remove braces, use single quotation)
     //maps
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
@@ -28,6 +29,7 @@ android {
         }
     }
     compileOptions {
+        // todo: redundant comment
         //core lib desugaring
         coreLibraryDesugaringEnabled = true
 
@@ -69,6 +71,7 @@ dependencies {
     implementation "androidx.room:room-rxjava3:2.4.2"
 
     //Room
+    // todo: same thing with braces and quotations
     implementation("androidx.room:room-ktx:2.4.2")
     implementation("androidx.room:room-runtime:2.4.2")
     kapt("androidx.room:room-compiler:2.4.2")

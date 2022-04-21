@@ -14,6 +14,7 @@ interface RaceTableDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRaceTable(raceTable: RaceTable): Completable
 
+    // todo: remove this if unused
     @Delete
     fun delete(raceTable: RaceTable)
 }

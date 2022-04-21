@@ -32,18 +32,6 @@ object F1ApiDomainMapper {
         return domainRaces
     }
 
-        fun mapCircuit(
-        races: List<com.example.f1_calendar.model.api.Race>,
-        circuitId: String
-    ): com.example.f1_calendar.model.domain.Circuit? {
-        for (race in races) {
-            if (race.Circuit.circuitId == circuitId) {
-                return mapCircuit(race.Circuit)
-            }
-        }
-        return null
-    }
-
     private fun mapCircuit(circuit: Circuit): com.example.f1_calendar.model.domain.Circuit {
         return Circuit(
             location = mapCircuitLocation(circuit.Location),
@@ -62,6 +50,7 @@ object F1ApiDomainMapper {
                 return mapCircuit(race.circuit)
             }
         }
+        // todo (david): figure out best course of action and report back
         return mapCircuit(raceTable.races[0].circuit)
     }
 
@@ -123,6 +112,7 @@ object F1ApiDomainMapper {
         return when {
             time.isNullOrBlank() -> {
                 LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
+                // todo: watch what time zone the server uses (probably utc)
                     .atStartOfDay(ZoneId.systemDefault())
             }
             else -> {

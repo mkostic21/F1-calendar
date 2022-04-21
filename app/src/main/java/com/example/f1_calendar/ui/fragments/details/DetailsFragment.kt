@@ -28,14 +28,21 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
     private lateinit var binding: FragmentDetailsBinding
     private val args: DetailsFragmentArgs by navArgs()
 
+    // todo: make private val that saves lat lon for the map
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // people often use dagger.android library to do this easily, but its bad
+        // todo: move this to onAttach
         (activity?.application as F1Application).f1Component.inject(this)
+
+        // todo: refactor binding as recommended on Android devs link I sent you
+        //  (onCreateView, onDestroyView, use private nullable var, access with not-null-asserted val, etc)
         binding = FragmentDetailsBinding.bind(view)
 
         viewModel.fetchUiState(circuitId = args.circuitId, season = args.season!!)
         binding.map.onCreate(savedInstanceState)
-
+        // todo: move viewmodel observe into separate observeViewModel method
         viewModel.uiState.observe(viewLifecycleOwner){ state ->
             when (state) {
                 is DetailsFragmentUiState.Success -> {

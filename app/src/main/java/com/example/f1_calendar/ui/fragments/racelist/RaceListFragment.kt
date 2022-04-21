@@ -23,16 +23,23 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list), OnHeaderItemSele
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel: RaceListViewModel by viewModels { viewModelFactory }
+
+    // todo: use SelectedSeasonProvider instead of SeasonPickerViewModel
+    // todo: use injected viewModelFactory
     private val pickerViewModel: SeasonPickerViewModel by activityViewModels()
 
+    // TODO: binding
     private lateinit var binding: FragmentRaceListBinding
 
     private val adapter: RaceListRecyclerViewAdapter by lazy {
+        // todo: instantiate listeners here instead of making the fragment inherit from them
+        //  Do this by making getOnHeaderItemSelectedListener method and similar
         RaceListRecyclerViewAdapter(this, this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // todo: move to attach
         (activity?.application as F1Application).f1Component.inject(this)
         binding = FragmentRaceListBinding.bind(view)
 

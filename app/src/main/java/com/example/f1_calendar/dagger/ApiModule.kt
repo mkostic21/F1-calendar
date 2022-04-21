@@ -19,6 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.time.ZonedDateTime
 import javax.inject.Singleton
 
+// todo: move repository to RepositoryModule, db to DatabaseModule, etc
+
 @Module
 class ApiModule {
 
