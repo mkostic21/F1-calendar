@@ -6,7 +6,6 @@ import com.example.f1_calendar.model.api.SecondPractice
 import com.example.f1_calendar.model.api.Sprint
 import com.example.f1_calendar.model.domain.*
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -112,8 +111,7 @@ object F1ApiDomainMapper {
         return when {
             time.isNullOrBlank() -> {
                 LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
-                // todo: watch what time zone the server uses (probably utc)
-                    .atStartOfDay(ZoneId.systemDefault())
+                    .atStartOfDay(ZoneOffset.UTC)
             }
             else -> {
                 ZonedDateTime.parse(

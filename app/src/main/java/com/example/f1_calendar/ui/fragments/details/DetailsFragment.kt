@@ -1,9 +1,12 @@
 package com.example.f1_calendar.ui.fragments.details
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,28 +27,57 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel: DetailsViewModel by viewModels { viewModelFactory }
-
-    private lateinit var binding: FragmentDetailsBinding
     private val args: DetailsFragmentArgs by navArgs()
 
-    // todo: make private val that saves lat lon for the map
+    private var _binding: FragmentDetailsBinding? = null
+    private val binding get() = _binding!!
+
+    private var lat: String? = null
+    private var long: String? = null
+    private var url: String? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        (activity?.application as F1Application).f1Component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // people often use dagger.android library to do this easily, but its bad
-        // todo: move this to onAttach
-        (activity?.application as F1Application).f1Component.inject(this)
-
-        // todo: refactor binding as recommended on Android devs link I sent you
-        //  (onCreateView, onDestroyView, use private nullable var, access with not-null-asserted val, etc)
-        binding = FragmentDetailsBinding.bind(view)
-
         viewModel.fetchUiState(circuitId = args.circuitId, season = args.season!!)
         binding.map.onCreate(savedInstanceState)
-        // todo: move viewmodel observe into separate observeViewModel method
-        viewModel.uiState.observe(viewLifecycleOwner){ state ->
+        setupViewModelObserver()
+        setupButtonMoreInfoClickListener()
+
+    }
+
+    private fun setupButtonMoreInfoClickListener() {
+        binding.btnMoreInfo.setOnClickListener {
+            val builder = CustomTabsIntent.Builder()
+            context?.let { context ->
+                builder.build().launchUrl(
+                    context,
+                    Uri.parse(url)
+                )
+            }
+        }
+    }
+
+    private fun setupViewModelObserver() {
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is DetailsFragmentUiState.Success -> {
+                    lat = state.lat
+                    long = state.long
+                    url = state.url
                     binding.map.getMapAsync(this)
                 }
                 is DetailsFragmentUiState.Error -> {
@@ -56,23 +88,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
                 }
             }
         }
-
-        binding.btnMoreInfo.setOnClickListener {
-            val builder = CustomTabsIntent.Builder()
-            context?.let { context ->
-                builder.build().launchUrl(
-                    context,
-                    Uri.parse(viewModel.getUrl())
-                )
-            }
-        }
     }
 
     override fun onMapReady(mMap: GoogleMap) {
-        val loc = viewModel.getLocation()
-        val location = LatLng(loc.lat.toDouble(), loc.long.toDouble())
-        mMap.addMarker(MarkerOptions().position(location))
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14f))
+        if (lat == null || long == null) {
+            return
+        } else {
+            val location = LatLng(lat!!.toDouble(), long!!.toDouble())
+            mMap.addMarker(MarkerOptions().position(location))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14f))
+        }
     }
 
     override fun onStart() {
@@ -98,6 +123,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
     override fun onDestroy() {
         super.onDestroy()
         binding.map.onDestroy()
+        _binding = null
     }
 
     override fun onLowMemory() {
@@ -109,5 +135,4 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
         super.onSaveInstanceState(outState)
         binding.map.onSaveInstanceState(outState)
     }
-
 }

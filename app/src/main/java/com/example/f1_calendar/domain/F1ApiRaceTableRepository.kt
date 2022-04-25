@@ -4,14 +4,13 @@ import android.util.Log
 import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.model.domain.Circuit
 import com.example.f1_calendar.model.domain.RaceTable
-import com.example.f1_calendar.room.F1Database
+import com.example.f1_calendar.room.RaceTableDao
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class F1ApiRaceTableRepository @Inject constructor(
     private val f1Api: F1Api,
-    // todo: inject race table dao, not whole database
-    private val roomDatabase: F1Database
+    private val roomDatabase: RaceTableDao
 ) : RaceTableRepository {
     override fun getRaceTable(season: String): Single<RaceTable> {
         return getRacesFromDatabase(season = season)
@@ -33,7 +32,7 @@ class F1ApiRaceTableRepository @Inject constructor(
     }
 
     private fun getRacesFromDatabase(season: String): Single<RaceTable> {
-        return roomDatabase.getRaceTableDao().getRacesBySeason(season = season)
+        return roomDatabase.getRacesBySeason(season = season)
     }
 
     private fun fetchFromApiAndSaveToDb(season: String): Single<RaceTable> {
@@ -44,12 +43,11 @@ class F1ApiRaceTableRepository @Inject constructor(
                 season = response.MRData.raceTable.season
             )
         }.flatMap { raceTable ->
-            roomDatabase.getRaceTableDao()
+            roomDatabase
                 .insertRaceTable(raceTable = raceTable)
                 .toSingleDefault(raceTable)
         }
     }
 }
 
-// todo: make private
-class RacesEmptyException : RuntimeException()
+private class RacesEmptyException : RuntimeException()

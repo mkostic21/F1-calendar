@@ -1,30 +1,59 @@
 package com.example.f1_calendar.ui.fragments.seasonpick
 
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.f1_calendar.F1Application
 import com.example.f1_calendar.R
-import com.example.f1_calendar.dagger.viewmodel.ViewModelFactory
 import com.example.f1_calendar.databinding.FragmentSeasonPickBinding
 import javax.inject.Inject
 
 class SeasonPickFragment : Fragment(R.layout.fragment_season_pick) {
-    // todo: refactor binding as we talked before
-    private lateinit var binding: FragmentSeasonPickBinding
-
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel: SeasonPickerViewModel by activityViewModels { viewModelFactory }
+
+    private var _binding: FragmentSeasonPickBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onAttach(context: Context) {
+        (activity?.application as F1Application).f1Component.inject(this)
+        super.onAttach(context)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSeasonPickBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentSeasonPickBinding.bind(view)
+        viewModel.fetchUiState()
+        setupViewModelObserver()
+        handleOnBackPress()
+    }
 
-        setupNumberPicker()
+    private fun setupViewModelObserver() {
+        viewModel.uiState.observe(viewLifecycleOwner){ state ->
+            setupNumberPicker(
+                minValue = state.minValue,
+                maxValue = state.maxValue,
+                value = state.value
+            )
+        }
+    }
 
-        // todo: move to separate method
+    private fun handleOnBackPress() {
         val dispatcher = requireActivity().onBackPressedDispatcher
         dispatcher.addCallback(this){
             viewModel.setSeason(binding.numberPickerSeason.value.toString())
@@ -33,17 +62,16 @@ class SeasonPickFragment : Fragment(R.layout.fragment_season_pick) {
         }
     }
 
-    // todo: number picker initialization is responsibility of ViewModel (in other words, min max need
-    //  to be part of ui state)
-    private fun setupNumberPicker() {
-        // todo: use run
-        binding.apply {
-            numberPickerSeason.minValue = 1950
-            numberPickerSeason.maxValue = 2022
-            numberPickerSeason.wrapSelectorWheel = false
-            numberPickerSeason.value = viewModel.season.value!!.toInt()
+    private fun setupNumberPicker(minValue: Int, maxValue: Int, value: Int) {
+        binding.run {
+            numberPickerSeason.minValue = minValue
+            numberPickerSeason.maxValue = maxValue
+            numberPickerSeason.value = value
         }
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

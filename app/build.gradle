@@ -4,9 +4,8 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs'
 
-    // todo: be consistent (remove braces, use single quotation)
     //maps
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -29,10 +28,7 @@ android {
         }
     }
     compileOptions {
-        // todo: redundant comment
-        //core lib desugaring
         coreLibraryDesugaringEnabled = true
-
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -47,51 +43,46 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation "androidx.core:core-ktx:$versions.core"
+    implementation "androidx.appcompat:appcompat:$versions.app_compat"
+    implementation "com.google.android.material:material:$versions.material"
+    implementation "androidx.constraintlayout:constraintlayout:$versions.constraint_layout"
+    testImplementation "junit:junit:$versions.junit"
+    androidTestImplementation "androidx.test.ext:junit:$versions.ext_junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
 
     //navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
+    implementation "androidx.navigation:navigation-fragment-ktx:$versions.navigation_component"
+    implementation "androidx.navigation:navigation-ui-ktx:$versions.navigation_component"
 
     //retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 
     //RxJava
-    implementation 'io.reactivex.rxjava3:rxjava:3.1.4'
-    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
-    implementation "androidx.room:room-rxjava3:2.4.2"
+    implementation "io.reactivex.rxjava3:rxjava:$versions.rxjava"
+    implementation "io.reactivex.rxjava3:rxkotlin:$versions.rxkotlin"
+    implementation "io.reactivex.rxjava3:rxandroid:$versions.rxandroid"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$versions.retrofit"
+    implementation "androidx.room:room-rxjava3:$versions.room"
 
     //Room
-    // todo: same thing with braces and quotations
-    implementation("androidx.room:room-ktx:2.4.2")
-    implementation("androidx.room:room-runtime:2.4.2")
-    kapt("androidx.room:room-compiler:2.4.2")
+    implementation "androidx.room:room-ktx:$versions.room"
+    implementation "androidx.room:room-runtime:$versions.room"
+    kapt "androidx.room:room-compiler:$versions.room"
 
-    //core lib desugaring
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    //core library desugaring
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$versions.core_library_desugaring"
 
     //Dagger
-    implementation 'com.google.dagger:dagger:2.40'
-    kapt 'com.google.dagger:dagger-compiler:2.40'
-
-    //Glide
-    implementation 'com.github.bumptech.glide:glide:4.13.0'
-    kapt 'com.github.bumptech.glide:compiler:4.13.0'
+    implementation "com.google.dagger:dagger:$versions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
 
     //Maps
-    implementation 'com.google.android.gms:play-services-maps:18.0.2'
-    implementation 'com.google.maps.android:maps-utils-ktx:3.4.0'
+    implementation "com.google.android.gms:play-services-maps:$versions.maps_play_services"
+    implementation "com.google.maps.android:maps-utils-ktx:$versions.maps"
 
     //Chrome Custom Tabs
-    implementation "androidx.browser:browser:1.4.0"
+    implementation "androidx.browser:browser:$versions.chrome_custom_tabs"
 
 }

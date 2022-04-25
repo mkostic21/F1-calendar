@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.f1_calendar.domain.RaceTableRepository
-import com.example.f1_calendar.model.domain.Location
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiState
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiStateMapper
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -25,13 +24,7 @@ class DetailsViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .map { circuit ->
-                // todo: move mapping to success into DetailsFragmentUiStateMapper as well
-                //  DetailsFragmentUiStateMapper.map(circuit)
-                DetailsFragmentUiState.Success(
-                    lat = DetailsFragmentUiStateMapper.mapLat(circuit = circuit),
-                    long = DetailsFragmentUiStateMapper.mapLong(circuit = circuit),
-                    url = DetailsFragmentUiStateMapper.mapUrl(circuit = circuit)
-                )
+                DetailsFragmentUiStateMapper.map(circuit = circuit)
             }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
@@ -47,34 +40,6 @@ class DetailsViewModel @Inject constructor(
             )
 
         compositeDisposable.add(disposable)
-    }
-
-    /**
-     * Methods in ViewModel that return anything but void are considered bad practice and can cause
-     * frequent crashes on Android applications because it is not guaranteed that the View will access
-     * these methods when its views are initialised.
-     *
-     * Instead, the ViewModel needs to expose void methods that do some operation and publish the results
-     * into a LiveData object, which ensures that the results are delivered only when the View is able
-     * to display them.
-     *
-     * TODO: remove getLocation and getUrl, add appropriate Location and Url fields to the UI state
-     *  object that you post in [fetchUiState].
-     */
-
-    fun getLocation(): Location {
-        val state = _uiState.value as DetailsFragmentUiState.Success
-        return Location(
-            country = "",
-            lat = state.lat,
-            long = state.long,
-            locality = ""
-        )
-    }
-
-    fun getUrl(): String {
-        val state = _uiState.value as DetailsFragmentUiState.Success
-        return state.url
     }
 
     override fun onCleared() {

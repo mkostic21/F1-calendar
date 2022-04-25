@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.f1_calendar.ui.fragments.details.DetailsViewModel
 import com.example.f1_calendar.ui.fragments.racelist.RaceListViewModel
+import com.example.f1_calendar.ui.fragments.seasonpick.SeasonPickerViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -21,6 +22,12 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DetailsViewModel::class)
     abstract fun bindDetailsViewModel(viewModel: DetailsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SeasonPickerViewModel::class)
+    abstract fun bindSeasonPickerViewModel(viewModel: SeasonPickerViewModel): ViewModel
+
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

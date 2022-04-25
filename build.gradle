@@ -1,5 +1,28 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext {
+        versions = [
+                core_library_desugaring:    '1.1.5',
+                room:                       '2.4.2',
+                navigation_component:       '2.4.2',
+                retrofit:                   '2.9.0',
+                rxjava:                     '3.1.4',
+                rxkotlin:                   '3.0.1',
+                rxandroid:                  '3.0.0',
+                dagger:                     '2.40',
+                chrome_custom_tabs:         '1.4.0',
+                maps:                       '3.4.0',
+                maps_play_services:         '18.0.2',
+                gradle_secrets:             '2.0.1',
+                material:                   '1.5.0',
+                constraint_layout:          '2.1.3',
+                core:                       '1.7.0',
+                app_compat:                 '1.4.1',
+                espresso:                   '3.4.0',
+                junit:                      '4.13.2',
+                ext_junit:                  '1.1.3'
+        ]
+    }
     repositories {
         gradlePluginPortal()
         google()
@@ -7,10 +30,10 @@ buildscript {
     }
     dependencies {
         //navigation
-        classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.4.2'
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$versions.navigation_component"
 
         //maps API
-        classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1")
+        classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:$versions.gradle_secrets"
 
     }
 }

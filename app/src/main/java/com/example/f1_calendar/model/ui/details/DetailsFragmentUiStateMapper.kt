@@ -4,6 +4,14 @@ import com.example.f1_calendar.model.domain.Circuit
 
 
 object DetailsFragmentUiStateMapper {
+
+    fun map(circuit: Circuit): DetailsFragmentUiState.Success{
+        return DetailsFragmentUiState.Success(
+            lat = mapLat(circuit = circuit),
+            long = mapLong(circuit = circuit),
+            url = mapUrl(circuit = circuit)
+        )
+    }
     fun mapLat(circuit: Circuit): String {
         return circuit.location.lat
     }
