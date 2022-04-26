@@ -12,15 +12,15 @@ object DetailsFragmentUiStateMapper {
             url = mapUrl(circuit = circuit)
         )
     }
-    fun mapLat(circuit: Circuit): String {
+    private fun mapLat(circuit: Circuit): String {
         return circuit.location.lat
     }
 
-    fun mapLong(circuit: Circuit): String {
+    private fun mapLong(circuit: Circuit): String {
         return circuit.location.long
     }
 
-    fun mapUrl(circuit: Circuit): String {
+    private fun mapUrl(circuit: Circuit): String {
         return circuit.url
     }
 }

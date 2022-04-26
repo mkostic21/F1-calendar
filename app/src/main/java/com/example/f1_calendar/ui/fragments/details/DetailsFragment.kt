@@ -16,6 +16,7 @@ import com.example.f1_calendar.F1Application
 import com.example.f1_calendar.R
 import com.example.f1_calendar.databinding.FragmentDetailsBinding
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiState
+import com.example.f1_calendar.util.Constants
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -53,20 +54,30 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.fetchUiState(circuitId = args.circuitId, season = args.season!!)
+        setupAppBar()
         binding.map.onCreate(savedInstanceState)
         setupViewModelObserver()
-        setupButtonMoreInfoClickListener()
-
     }
 
-    private fun setupButtonMoreInfoClickListener() {
-        binding.btnMoreInfo.setOnClickListener {
-            val builder = CustomTabsIntent.Builder()
-            context?.let { context ->
-                builder.build().launchUrl(
-                    context,
-                    Uri.parse(url)
-                )
+    private fun setupAppBar() {
+        binding.detailsTopAppBar.run {
+            setNavigationOnClickListener {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.action_read_more -> {
+                        val builder = CustomTabsIntent.Builder()
+                        context?.let { context ->
+                            builder.build().launchUrl(
+                                context,
+                                Uri.parse(url)
+                            )
+                        }
+                        true
+                    }
+                    else -> false
+                }
             }
         }
     }
@@ -96,7 +107,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
         } else {
             val location = LatLng(lat!!.toDouble(), long!!.toDouble())
             mMap.addMarker(MarkerOptions().position(location))
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14f))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Constants.MAP_ZOOM))
         }
     }
 

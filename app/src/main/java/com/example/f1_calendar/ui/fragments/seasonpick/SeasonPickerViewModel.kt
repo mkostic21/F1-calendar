@@ -1,5 +1,6 @@
 package com.example.f1_calendar.ui.fragments.seasonpick
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,5 +29,6 @@ class SeasonPickerViewModel @Inject constructor(): ViewModel(), SelectedSeasonPr
 
     fun setSeason(value: String) {
         _season.value = value
+        Log.d("response", "setSeason: $value")
     }
 }

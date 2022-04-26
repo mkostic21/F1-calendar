@@ -26,7 +26,6 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel: RaceListViewModel by viewModels { viewModelFactory }
-
     private val seasonProvider: SelectedSeasonProvider by activityViewModels<SeasonPickerViewModel> { viewModelFactory }
 
     private var _binding: FragmentRaceListBinding? = null
@@ -55,14 +54,26 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupAppBar()
         setupRecyclerView()
         setupViewModelObserver()
         setupPickerViewModelObserver()
 
-        //todo: implement appbar and add button
-        binding.fabTest.setOnClickListener {
-            val action = RaceListFragmentDirections.actionRaceListFragmentToSeasonPickFragment()
-            findNavController().navigate(action)
+    }
+
+    private fun setupAppBar() {
+        binding.raceListTopAppBar.run {
+            title = seasonProvider.season.value
+            setOnMenuItemClickListener { menuItem ->
+                when(menuItem.itemId) {
+                    R.id.action_pick_season -> {
+                        val action = RaceListFragmentDirections.actionRaceListFragmentToSeasonPickFragment()
+                        findNavController().navigate(action)
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
     }
 

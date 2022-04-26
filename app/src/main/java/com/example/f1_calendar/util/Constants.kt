@@ -6,5 +6,6 @@ class Constants {
         const val DATABASE_NAME = "f1calendar.db"
         const val NUMBER_PICKER_MIN_VALUE = 1950
         const val NUMBER_PICKER_MAX_VALUE = 2022
+        const val MAP_ZOOM = 14f
     }
 }

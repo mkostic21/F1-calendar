@@ -41,10 +41,17 @@ class SeasonPickFragment : Fragment(R.layout.fragment_season_pick) {
         viewModel.fetchUiState()
         setupViewModelObserver()
         handleOnBackPress()
+        setupAppBar()
+    }
+
+    private fun setupAppBar() {
+        binding.seasonPickTopAppBar.setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun setupViewModelObserver() {
-        viewModel.uiState.observe(viewLifecycleOwner){ state ->
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
             setupNumberPicker(
                 minValue = state.minValue,
                 maxValue = state.maxValue,
@@ -55,7 +62,7 @@ class SeasonPickFragment : Fragment(R.layout.fragment_season_pick) {
 
     private fun handleOnBackPress() {
         val dispatcher = requireActivity().onBackPressedDispatcher
-        dispatcher.addCallback(this){
+        dispatcher.addCallback(this) {
             viewModel.setSeason(binding.numberPickerSeason.value.toString())
             isEnabled = false
             dispatcher.onBackPressed()
