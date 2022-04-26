@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -117,6 +118,16 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         binding.rvRaceList.adapter = adapter
         binding.rvRaceList.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        addItemDecoration()
+    }
+
+    private fun addItemDecoration() {
+        val decorationHeight = resources.getDimensionPixelSize(R.dimen.list_item_divider_height)
+        context?.let {
+            binding.rvRaceList.addItemDecoration(DividerItemDecoration(
+                ContextCompat.getColor(it, R.color.black), heightInPixels = decorationHeight
+            ))
+        }
     }
 
     private fun getOnHeaderItemSelectedListener(): OnHeaderItemSelectedListener {
@@ -126,7 +137,6 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
             }
 
             override fun showDetails(header: RaceWeekListItem.Header) {
-                //todo: add animation
                 val circuitId = header.circuitId
                 val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(
                     circuitId,
@@ -140,7 +150,6 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     private fun getOnEventItemSelectedListener(): OnEventItemSelectedListener {
         return object : OnEventItemSelectedListener {
             override fun showDetails(event: RaceWeekListItem.Event) {
-                //todo: add animation
                 val circuitId = event.circuitId
                 val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(
                     circuitId,

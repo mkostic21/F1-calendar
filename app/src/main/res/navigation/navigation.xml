@@ -9,10 +9,18 @@
         android:label="RaceListFragment">
         <action
             android:id="@+id/action_raceListFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_raceListFragment_to_seasonPickFragment"
-            app:destination="@id/seasonPickFragment" />
+            app:destination="@id/seasonPickFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
@@ -33,9 +41,5 @@
         android:id="@+id/seasonPickFragment"
         android:name="com.example.f1_calendar.ui.fragments.seasonpick.SeasonPickFragment"
         android:label="SeasonPickFragment">
-        <action
-            android:id="@+id/action_seasonPickFragment_to_raceListFragment"
-            app:destination="@id/raceListFragment">
-        </action>
     </fragment>
 </navigation>
