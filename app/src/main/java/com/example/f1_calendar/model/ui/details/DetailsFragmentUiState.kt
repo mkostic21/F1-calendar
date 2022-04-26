@@ -11,5 +11,7 @@ sealed class DetailsFragmentUiState {
 
     data class Error(val t: Throwable) : DetailsFragmentUiState()
 
+    object Empty : DetailsFragmentUiState()
+
     object Loading : DetailsFragmentUiState()
 }

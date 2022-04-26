@@ -41,7 +41,6 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     override fun onAttach(context: Context) {
         (activity?.application as F1Application).f1Component.inject(this)
         super.onAttach(context)
-
     }
 
     override fun onCreateView(
@@ -59,16 +58,16 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         setupRecyclerView()
         setupViewModelObserver()
         setupPickerViewModelObserver()
-
     }
 
     private fun setupAppBar() {
         binding.raceListTopAppBar.run {
             title = seasonProvider.season.value
             setOnMenuItemClickListener { menuItem ->
-                when(menuItem.itemId) {
+                when (menuItem.itemId) {
                     R.id.action_pick_season -> {
-                        val action = RaceListFragmentDirections.actionRaceListFragmentToSeasonPickFragment()
+                        val action =
+                            RaceListFragmentDirections.actionRaceListFragmentToSeasonPickFragment()
                         findNavController().navigate(action)
                         true
                     }
@@ -111,7 +110,6 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     private fun hideProgressBar() {
         Log.d("Response", "Hiding progressbar")
         binding.progressCircular.visibility = View.GONE
-
     }
 
     private fun setupRecyclerView() {
@@ -124,9 +122,11 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     private fun addItemDecoration() {
         val decorationHeight = resources.getDimensionPixelSize(R.dimen.list_item_divider_height)
         context?.let {
-            binding.rvRaceList.addItemDecoration(DividerItemDecoration(
-                ContextCompat.getColor(it, R.color.black), heightInPixels = decorationHeight
-            ))
+            binding.rvRaceList.addItemDecoration(
+                DividerItemDecoration(
+                    ContextCompat.getColor(it, R.color.black), heightInPixels = decorationHeight
+                )
+            )
         }
     }
 
@@ -140,7 +140,7 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
                 val circuitId = header.circuitId
                 val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(
                     circuitId,
-                    seasonProvider.season.value
+                    seasonProvider.season.value!!
                 )
                 findNavController().navigate(action)
             }
@@ -153,7 +153,7 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
                 val circuitId = event.circuitId
                 val action = RaceListFragmentDirections.actionRaceListFragmentToDetailsFragment(
                     circuitId,
-                    seasonProvider.season.value
+                    seasonProvider.season.value!!
                 )
                 findNavController().navigate(action)
             }

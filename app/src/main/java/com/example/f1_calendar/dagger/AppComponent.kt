@@ -15,11 +15,7 @@ import javax.inject.Singleton
         ApiModule::class,
         ViewModelModule::class,
         DatabaseModule::class,
-        DatabaseDaoModule::class,
-        ConverterModule::class,
-        GsonModule::class,
         RepositoryModule::class,
-        RetrofitModule::class
     ]
 )
 interface AppComponent {

@@ -36,6 +36,9 @@ class DetailsViewModel @Inject constructor(
                 },
                 onError = { t ->
                     _uiState.value = DetailsFragmentUiState.Error(t)
+                },
+                onComplete = {
+                    _uiState.value = DetailsFragmentUiState.Empty
                 }
             )
 

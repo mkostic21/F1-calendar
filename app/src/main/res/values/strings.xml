@@ -4,4 +4,5 @@
     <string name="action_pick_season">Pick Season</string>
     <string name="season_pick_app_bar_title">Season Select</string>
     <string name="details_app_bar_title">Circuit Information</string>
+    <string name="details_error">Could not load circuit information</string>
 </resources>

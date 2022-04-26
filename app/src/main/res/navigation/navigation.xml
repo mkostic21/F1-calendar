@@ -34,8 +34,7 @@
             app:argType="string" />
         <argument
             android:name="season"
-            app:argType="string"
-            app:nullable="true" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/seasonPickFragment"

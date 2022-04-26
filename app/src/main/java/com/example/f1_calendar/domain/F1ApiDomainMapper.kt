@@ -43,14 +43,13 @@ object F1ApiDomainMapper {
     fun mapCircuit(
         raceTable: RaceTable,
         circuitId: String
-    ): com.example.f1_calendar.model.domain.Circuit {
+    ): com.example.f1_calendar.model.domain.Circuit? {
         for (race in raceTable.races) {
             if (race.circuit.circuitId == circuitId) {
                 return mapCircuit(race.circuit)
             }
         }
-        // todo (david): figure out best course of action and report back
-        return mapCircuit(raceTable.races[0].circuit)
+        return null
     }
 
     private fun mapSprint(sprint: Sprint?): com.example.f1_calendar.model.domain.Sprint? {

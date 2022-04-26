@@ -5,6 +5,7 @@ import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.model.domain.Circuit
 import com.example.f1_calendar.model.domain.RaceTable
 import com.example.f1_calendar.room.RaceTableDao
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -25,9 +26,17 @@ class F1ApiRaceTableRepository @Inject constructor(
             }
     }
 
-    override fun getCircuit(season: String, circuitId: String): Single<Circuit> {
-        return getRaceTable(season = season).map { raceTable ->
-            F1ApiDomainMapper.mapCircuit(raceTable = raceTable, circuitId = circuitId)
+    override fun getCircuit(season: String, circuitId: String): Maybe<Circuit> {
+        return getRaceTable(season = season).flatMapMaybe { raceTable ->
+            val circuit = F1ApiDomainMapper.mapCircuit(
+                raceTable = raceTable,
+                circuitId = circuitId
+            )
+            if (circuit == null) {
+                Maybe.empty()
+            } else {
+                Maybe.just(circuit)
+            }
         }
     }
 

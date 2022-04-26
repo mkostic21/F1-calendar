@@ -46,7 +46,7 @@ class SeasonPickFragment : Fragment(R.layout.fragment_season_pick) {
 
     private fun setupAppBar() {
         binding.seasonPickTopAppBar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            activity?.onBackPressedDispatcher?.onBackPressed()
         }
     }
 
@@ -61,8 +61,8 @@ class SeasonPickFragment : Fragment(R.layout.fragment_season_pick) {
     }
 
     private fun handleOnBackPress() {
-        val dispatcher = requireActivity().onBackPressedDispatcher
-        dispatcher.addCallback(this) {
+        val dispatcher = activity?.onBackPressedDispatcher
+        dispatcher?.addCallback(this) {
             viewModel.setSeason(binding.numberPickerSeason.value.toString())
             isEnabled = false
             dispatcher.onBackPressed()

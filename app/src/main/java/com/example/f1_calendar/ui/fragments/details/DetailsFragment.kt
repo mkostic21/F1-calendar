@@ -18,13 +18,11 @@ import com.example.f1_calendar.databinding.FragmentDetailsBinding
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiState
 import com.example.f1_calendar.util.Constants
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import javax.inject.Inject
 
-class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback {
+class DetailsFragment : Fragment(R.layout.fragment_details) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel: DetailsViewModel by viewModels { viewModelFactory }
@@ -32,10 +30,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
-
-    private var lat: String? = null
-    private var long: String? = null
-    private var url: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,16 +47,15 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.fetchUiState(circuitId = args.circuitId, season = args.season!!)
-        setupAppBar()
+        viewModel.fetchUiState(circuitId = args.circuitId, season = args.season)
         binding.map.onCreate(savedInstanceState)
         setupViewModelObserver()
     }
 
-    private fun setupAppBar() {
+    private fun setupAppBar(url: String) {
         binding.detailsTopAppBar.run {
             setNavigationOnClickListener {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                activity?.onBackPressedDispatcher?.onBackPressed()
             }
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
@@ -86,10 +79,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is DetailsFragmentUiState.Success -> {
-                    lat = state.lat
-                    long = state.long
-                    url = state.url
-                    binding.map.getMapAsync(this)
+                    setupAppBar(state.url)
+                    binding.map.getMapAsync { mMap ->
+                        val location = LatLng(state.lat.toDouble(), state.long.toDouble())
+                        mMap.addMarker(MarkerOptions().position(location))
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Constants.MAP_ZOOM))
+                    }
                 }
                 is DetailsFragmentUiState.Error -> {
                     Log.d("Response", state.t.toString())
@@ -97,17 +92,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details), OnMapReadyCallback 
                 is DetailsFragmentUiState.Loading -> {
                     Log.d("Response", "Loading...")
                 }
+                is DetailsFragmentUiState.Empty -> {
+                    binding.run {
+                        map.visibility = View.GONE
+                        tvEmpty.visibility = View.VISIBLE
+                        tvEmpty.text = resources.getString(R.string.details_error)
+                    }
+                }
             }
-        }
-    }
-
-    override fun onMapReady(mMap: GoogleMap) {
-        if (lat == null || long == null) {
-            return
-        } else {
-            val location = LatLng(lat!!.toDouble(), long!!.toDouble())
-            mMap.addMarker(MarkerOptions().position(location))
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Constants.MAP_ZOOM))
         }
     }
 
