@@ -7,14 +7,14 @@ import com.example.f1_calendar.domain.RaceTableRepository
 import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiState
 import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiStateMapper
 import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import com.example.f1_calendar.util.SchedulerProvider
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class RaceListViewModel @Inject constructor(
-    private val repository: RaceTableRepository
+    private val repository: RaceTableRepository,
+    private val schedulerProvider: SchedulerProvider
 ) : ViewModel() {
     private val _uiState = MutableLiveData<RaceListFragmentUiState>()
     val uiState: LiveData<RaceListFragmentUiState> get() = _uiState
@@ -69,15 +69,15 @@ class RaceListViewModel @Inject constructor(
             return
         } else {
             val disposable = repository.getRaceTable(season = season)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.computation())
+                .subscribeOn(schedulerProvider.io)
+                .observeOn(schedulerProvider.computation)
                 .map { raceTable ->
                     completeList =
                         RaceListFragmentUiStateMapper.mapRaceWeekList(raceTable = raceTable)
                     currentList = completeList
                     RaceListFragmentUiState.Success(completeList)
                 }
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(schedulerProvider.main)
                 .doOnSubscribe {
                     _uiState.value = RaceListFragmentUiState.Loading
                 }

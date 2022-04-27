@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import com.example.f1_calendar.domain.RaceTableRepository
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiState
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiStateMapper
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import com.example.f1_calendar.util.SchedulerProvider
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class DetailsViewModel @Inject constructor(
-    private val repository: RaceTableRepository
+    private val repository: RaceTableRepository,
+    private val schedulerProvider: SchedulerProvider
 ) : ViewModel() {
     private val _uiState = MutableLiveData<DetailsFragmentUiState>()
     val uiState: LiveData<DetailsFragmentUiState> get() = _uiState
@@ -21,12 +21,12 @@ class DetailsViewModel @Inject constructor(
 
     fun fetchUiState(circuitId: String, season: String) {
         val disposable = repository.getCircuit(season = season, circuitId = circuitId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
+            .subscribeOn(schedulerProvider.io)
+            .observeOn(schedulerProvider.computation)
             .map { circuit ->
                 DetailsFragmentUiStateMapper.map(circuit = circuit)
             }
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(schedulerProvider.main)
             .doOnSubscribe {
                 _uiState.value = DetailsFragmentUiState.Loading
             }
