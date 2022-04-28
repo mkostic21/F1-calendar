@@ -87,7 +87,7 @@ object RaceListFragmentUiStateMapper {
                     if (!foundNextRace && raceEvent.dateTime.isAfter(currentDate)) {
                         val nextRaceId = raceList.indexOf(raceEvent)
 
-                        //add next race weekend events
+                        //add next-race events under header
                         for (i in 1..4) {
                             collapsedRaceList.add(raceList[nextRaceId + i])
                         }

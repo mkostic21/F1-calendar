@@ -7,10 +7,12 @@ import com.example.f1_calendar.domain.RaceTableRepository
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiState
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiStateMapper
 import com.example.f1_calendar.util.SchedulerProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
+@HiltViewModel
 class DetailsViewModel @Inject constructor(
     private val repository: RaceTableRepository,
     private val schedulerProvider: SchedulerProvider

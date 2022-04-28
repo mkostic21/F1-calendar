@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
+
 class F1ApiRaceTableRepository @Inject constructor(
     private val f1Api: F1Api,
     private val roomDatabase: RaceTableDao

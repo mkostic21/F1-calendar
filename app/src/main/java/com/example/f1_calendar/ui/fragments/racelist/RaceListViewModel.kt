@@ -8,17 +8,18 @@ import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiState
 import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiStateMapper
 import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
 import com.example.f1_calendar.util.SchedulerProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
+@HiltViewModel
 class RaceListViewModel @Inject constructor(
     private val repository: RaceTableRepository,
     private val schedulerProvider: SchedulerProvider
 ) : ViewModel() {
     private val _uiState = MutableLiveData<RaceListFragmentUiState>()
     val uiState: LiveData<RaceListFragmentUiState> get() = _uiState
-
 
     private var currentSeason: String = ""
     private var completeList: List<RaceWeekListItem> = listOf()

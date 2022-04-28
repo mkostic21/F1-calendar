@@ -1,20 +1,23 @@
-package com.example.f1_calendar.dagger
+package com.example.f1_calendar.di
 
 import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.util.Constants.Companion.BASE_URL
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class ApiModule {
+@InstallIn(SingletonComponent::class)
+object ApiModule {
 
     @Singleton
     @Provides
-    fun provideApiInterface(retrofit: Retrofit): F1Api {
+    fun provideApi(retrofit: Retrofit): F1Api {
         return retrofit.create(F1Api::class.java)
     }
 

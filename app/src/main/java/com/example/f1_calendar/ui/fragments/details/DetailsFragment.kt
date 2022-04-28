@@ -1,6 +1,5 @@
 package com.example.f1_calendar.ui.fragments.details
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,9 +9,7 @@ import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.example.f1_calendar.F1Application
 import com.example.f1_calendar.R
 import com.example.f1_calendar.databinding.FragmentDetailsBinding
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiState
@@ -20,12 +17,11 @@ import com.example.f1_calendar.util.Constants.Companion.MAP_ZOOM
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details) {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel: DetailsViewModel by viewModels { viewModelFactory }
+    private val viewModel: DetailsViewModel by viewModels()
     private val args: DetailsFragmentArgs by navArgs()
 
     private var _binding: FragmentDetailsBinding? = null
@@ -38,11 +34,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onAttach(context: Context) {
-        (activity?.application as F1Application).f1Component.inject(this)
-        super.onAttach(context)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

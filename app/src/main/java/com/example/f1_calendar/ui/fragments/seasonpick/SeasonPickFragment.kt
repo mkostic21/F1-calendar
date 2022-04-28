@@ -1,6 +1,5 @@
 package com.example.f1_calendar.ui.fragments.seasonpick
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,24 +7,16 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import com.example.f1_calendar.F1Application
 import com.example.f1_calendar.R
 import com.example.f1_calendar.databinding.FragmentSeasonPickBinding
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SeasonPickFragment : Fragment(R.layout.fragment_season_pick) {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel: SeasonPickerViewModel by activityViewModels { viewModelFactory }
+    private val viewModel: SeasonPickerViewModel by activityViewModels()
 
     private var _binding: FragmentSeasonPickBinding? = null
     private val binding get() = _binding!!
-
-    override fun onAttach(context: Context) {
-        (activity?.application as F1Application).f1Component.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -9,7 +9,7 @@ buildscript {
                 rxjava:                     '3.1.4',
                 rxkotlin:                   '3.0.1',
                 rxandroid:                  '3.0.0',
-                dagger:                     '2.40',
+                hilt:                       '2.41',
                 chrome_custom_tabs:         '1.4.0',
                 maps:                       '3.4.0',
                 maps_play_services:         '18.0.2',
@@ -32,6 +32,9 @@ buildscript {
     dependencies {
         //navigation
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$versions.navigation_component"
+
+        //hilt
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$versions.hilt"
 
         //maps API
         classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:$versions.gradle_secrets"

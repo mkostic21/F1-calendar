@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import com.example.f1_calendar.model.ui.seasonpick.SeasonPickFragmentUiState
 import com.example.f1_calendar.util.Constants.Companion.NUMBER_PICKER_MAX_VALUE
 import com.example.f1_calendar.util.Constants.Companion.NUMBER_PICKER_MIN_VALUE
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class SeasonPickerViewModel @Inject constructor(): ViewModel(), SelectedSeasonProvider {
     private val _season = MutableLiveData("2022")
     override val season: LiveData<String> get() = _season

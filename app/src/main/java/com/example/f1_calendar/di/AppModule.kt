@@ -1,18 +1,16 @@
-package com.example.f1_calendar.dagger
+package com.example.f1_calendar.di
 
-import android.app.Application
-import android.content.Context
 import com.example.f1_calendar.util.DefaultSchedulerProvider
 import com.example.f1_calendar.util.SchedulerProvider
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-class AppModule(private val app: Application) {
-    @Singleton
-    @Provides
-    fun provideContext(): Context = app
+@InstallIn(SingletonComponent::class)
+object AppModule {
 
     @Singleton
     @Provides

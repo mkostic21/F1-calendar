@@ -1,6 +1,5 @@
 package com.example.f1_calendar.ui.fragments.racelist
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,10 +10,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.f1_calendar.F1Application
 import com.example.f1_calendar.R
 import com.example.f1_calendar.adapter.RaceListRecyclerViewAdapter
 import com.example.f1_calendar.databinding.FragmentRaceListBinding
@@ -23,13 +20,12 @@ import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
 import com.example.f1_calendar.ui.fragments.seasonpick.SeasonPickerViewModel
 import com.example.f1_calendar.ui.fragments.seasonpick.SelectedSeasonProvider
 import com.example.f1_calendar.util.toPx
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RaceListFragment : Fragment(R.layout.fragment_race_list) {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel: RaceListViewModel by viewModels { viewModelFactory }
-    private val seasonProvider: SelectedSeasonProvider by activityViewModels<SeasonPickerViewModel> { viewModelFactory }
+    private val viewModel: RaceListViewModel by viewModels()
+    private val seasonProvider: SelectedSeasonProvider by activityViewModels<SeasonPickerViewModel>()
 
     private var _binding: FragmentRaceListBinding? = null
     private val binding get() = _binding!!
@@ -42,9 +38,12 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         RaceListRecyclerViewAdapter(headerItemListener, eventItemListener)
     }
 
-    override fun onAttach(context: Context) {
-        (activity?.application as F1Application).f1Component.inject(this)
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val splashScreen = activity?.installSplashScreen()
+        splashScreen?.setKeepOnScreenCondition {
+            viewModel.uiState.value is RaceListFragmentUiState.Loading
+        }
     }
 
     override fun onCreateView(
@@ -177,11 +176,4 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         _binding = null
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val splashScreen = activity?.installSplashScreen()
-        splashScreen?.setKeepOnScreenCondition {
-            viewModel.uiState.value is RaceListFragmentUiState.Loading
-        }
-    }
 }
