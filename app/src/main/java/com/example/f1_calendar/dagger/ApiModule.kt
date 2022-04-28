@@ -1,7 +1,7 @@
 package com.example.f1_calendar.dagger
 
 import com.example.f1_calendar.api.F1Api
-import com.example.f1_calendar.util.Constants
+import com.example.f1_calendar.util.Constants.Companion.BASE_URL
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -21,7 +21,7 @@ class ApiModule {
     @Singleton
     @Provides
     fun provideRetrofitInstance(): Retrofit {
-        return Retrofit.Builder().baseUrl(Constants.BASE_URL)
+        return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()

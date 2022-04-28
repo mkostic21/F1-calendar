@@ -19,10 +19,12 @@ class RaceListViewModel @Inject constructor(
     private val _uiState = MutableLiveData<RaceListFragmentUiState>()
     val uiState: LiveData<RaceListFragmentUiState> get() = _uiState
 
+
     private var currentSeason: String = ""
     private var completeList: List<RaceWeekListItem> = listOf()
-    private val headerIdToIsCollapsed: MutableMap<String, Boolean> = mutableMapOf()
+    private var headerIdToIsCollapsed: MutableMap<String, Boolean> = mutableMapOf()
     private var currentList: List<RaceWeekListItem> = listOf()
+    private var nextRaceId = 0
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -61,7 +63,7 @@ class RaceListViewModel @Inject constructor(
             currentList = editableList
         }
 
-        _uiState.value = RaceListFragmentUiState.Success(currentList)
+        _uiState.value = RaceListFragmentUiState.Success(listItems = currentList, nextRaceId = nextRaceId)
     }
 
     fun fetchUiState(season: String) {
@@ -74,8 +76,18 @@ class RaceListViewModel @Inject constructor(
                 .map { raceTable ->
                     completeList =
                         RaceListFragmentUiStateMapper.mapRaceWeekList(raceTable = raceTable)
-                    currentList = completeList
-                    RaceListFragmentUiState.Success(completeList)
+                    currentList = RaceListFragmentUiStateMapper.mapCurrentRaceWeekList(
+                        raceList = completeList,
+                        season = currentSeason
+                    )
+                    headerIdToIsCollapsed = RaceListFragmentUiStateMapper.mapCollapsedHeaderIds(
+                        currentList = currentList,
+                        season = currentSeason
+                    )
+                    RaceListFragmentUiState.Success(
+                        listItems = currentList,
+                        nextRaceId = RaceListFragmentUiStateMapper.mapNextRaceId(currentList, currentSeason)
+                    )
                 }
                 .observeOn(schedulerProvider.main)
                 .doOnSubscribe {
@@ -83,6 +95,7 @@ class RaceListViewModel @Inject constructor(
                 }
                 .subscribeBy(
                     onSuccess = { uiStateSuccess ->
+                        nextRaceId = uiStateSuccess.nextRaceId
                         _uiState.value = uiStateSuccess
                     },
                     onError = { t ->

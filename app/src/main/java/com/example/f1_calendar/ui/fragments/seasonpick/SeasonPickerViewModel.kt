@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.f1_calendar.model.ui.seasonpick.SeasonPickFragmentUiState
-import com.example.f1_calendar.util.Constants
+import com.example.f1_calendar.util.Constants.Companion.NUMBER_PICKER_MAX_VALUE
+import com.example.f1_calendar.util.Constants.Companion.NUMBER_PICKER_MIN_VALUE
 import javax.inject.Inject
 
 class SeasonPickerViewModel @Inject constructor(): ViewModel(), SelectedSeasonProvider {
@@ -21,8 +22,8 @@ class SeasonPickerViewModel @Inject constructor(): ViewModel(), SelectedSeasonPr
 
     fun fetchUiState(){
         _uiState.value = SeasonPickFragmentUiState(
-            minValue = Constants.NUMBER_PICKER_MIN_VALUE,
-            maxValue = Constants.NUMBER_PICKER_MAX_VALUE,
+            minValue = NUMBER_PICKER_MIN_VALUE,
+            maxValue = NUMBER_PICKER_MAX_VALUE,
             value = _season.value!!.toInt()
         )
     }

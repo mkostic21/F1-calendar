@@ -2,5 +2,4 @@
 <resources>
     <dimen name="list_item_padding">8dp</dimen>
     <dimen name="list_item_margin">12dp</dimen>
-    <dimen name="list_item_divider_height">1dp</dimen>
 </resources>

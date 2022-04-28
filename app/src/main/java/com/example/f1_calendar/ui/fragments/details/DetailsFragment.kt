@@ -16,7 +16,7 @@ import com.example.f1_calendar.F1Application
 import com.example.f1_calendar.R
 import com.example.f1_calendar.databinding.FragmentDetailsBinding
 import com.example.f1_calendar.model.ui.details.DetailsFragmentUiState
-import com.example.f1_calendar.util.Constants
+import com.example.f1_calendar.util.Constants.Companion.MAP_ZOOM
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -81,9 +81,11 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 is DetailsFragmentUiState.Success -> {
                     setupAppBar(state.url)
                     binding.map.getMapAsync { mMap ->
-                        val location = LatLng(state.lat.toDouble(), state.long.toDouble())
-                        mMap.addMarker(MarkerOptions().position(location))
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Constants.MAP_ZOOM))
+                        mMap.setOnMapLoadedCallback {
+                            val location = LatLng(state.lat.toDouble(), state.long.toDouble())
+                            mMap.addMarker(MarkerOptions().position(location))
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, MAP_ZOOM))
+                        }
                     }
                 }
                 is DetailsFragmentUiState.Error -> {

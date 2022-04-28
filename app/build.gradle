@@ -9,12 +9,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.example.f1_calendar"
-        minSdk 24
-        targetSdk 32
+        minSdk 28
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -50,6 +50,9 @@ dependencies {
     testImplementation "junit:junit:$versions.junit"
     androidTestImplementation "androidx.test.ext:junit:$versions.ext_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
+
+    //splashScreen
+    implementation "androidx.core:core-splashscreen:$versions.splash_screen"
 
     //navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$versions.navigation_component"

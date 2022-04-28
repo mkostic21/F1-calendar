@@ -58,7 +58,7 @@ class RaceListRecyclerViewAdapter(
                 val viewData = buildRaceViewData(currentData)
                 (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
 
-                if (hasEvents(currentList)) {
+                if(viewData.dateTime.year == 2022){
                     holder.itemView.setOnClickListener {
                         Log.d("response", "onBindViewHolder: pressed on position: $position")
                         onHeaderItemSelectedListener.toggleHeader(header = viewData)
@@ -80,15 +80,6 @@ class RaceListRecyclerViewAdapter(
                 }
             }
         }
-    }
-
-    private fun hasEvents(currentList: List<RaceWeekListItem>): Boolean {
-        for (item in currentList) {
-            if (item is RaceWeekListItem.Event) {
-                return true
-            }
-        }
-        return false
     }
 
     private fun buildRaceViewData(currentData: RaceWeekListItem?): RaceWeekListItem {

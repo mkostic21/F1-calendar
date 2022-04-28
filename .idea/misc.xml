@@ -4,8 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.325" />
+        <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.1985" />
         <entry key="app/src/main/res/drawable/ic_fab_accept_24.xml" value="0.2075" />
         <entry key="app/src/main/res/drawable/ic_fab_confirm_24.xml" value="0.1505" />
+        <entry key="app/src/main/res/drawable/ic_splash.xml" value="0.1985" />
+        <entry key="app/src/main/res/drawable/ic_splash_old_versions.xml" value="0.1985" />
+        <entry key="app/src/main/res/drawable/splash_image_old_versions.xml" value="0.1985" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_race_list.xml" value="0.15989583333333332" />

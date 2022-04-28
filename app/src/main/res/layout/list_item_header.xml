@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/list_item_padding"
-    android:background="@color/light_gray">
+    android:background="@color/cardview_shadow_start_color">
 
     <TextView
         android:id="@+id/header_event_type"

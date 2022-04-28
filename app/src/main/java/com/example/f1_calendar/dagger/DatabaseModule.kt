@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.example.f1_calendar.room.F1Database
 import com.example.f1_calendar.room.RaceConverter
 import com.example.f1_calendar.room.RaceTableDao
-import com.example.f1_calendar.util.Constants
+import com.example.f1_calendar.util.Constants.Companion.DATABASE_NAME
 import com.example.f1_calendar.util.ZonedDateTimeAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -23,7 +23,7 @@ class DatabaseModule {
         return Room.databaseBuilder(
             context.applicationContext,
             F1Database::class.java,
-            Constants.DATABASE_NAME
+            DATABASE_NAME
         ).fallbackToDestructiveMigration()
             .addTypeConverter(converter)
             .build()

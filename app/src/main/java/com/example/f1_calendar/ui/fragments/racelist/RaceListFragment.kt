@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -21,6 +22,7 @@ import com.example.f1_calendar.model.ui.racelist.RaceListFragmentUiState
 import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
 import com.example.f1_calendar.ui.fragments.seasonpick.SeasonPickerViewModel
 import com.example.f1_calendar.ui.fragments.seasonpick.SelectedSeasonProvider
+import com.example.f1_calendar.util.toPx
 import javax.inject.Inject
 
 class RaceListFragment : Fragment(R.layout.fragment_race_list) {
@@ -31,6 +33,8 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
 
     private var _binding: FragmentRaceListBinding? = null
     private val binding get() = _binding!!
+
+    private var hasScrolled = false
 
     private val adapter: RaceListRecyclerViewAdapter by lazy {
         val headerItemListener = getOnHeaderItemSelectedListener()
@@ -83,6 +87,7 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
                 is RaceListFragmentUiState.Success -> {
                     adapter.submitList(state.listItems)
                     hideProgressBar()
+                    scrollToPosition(state.nextRaceId)
                 }
                 is RaceListFragmentUiState.Error -> {
                     Log.d("Response", state.t.toString())
@@ -93,6 +98,13 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
                     showProgressBar()
                 }
             }
+        }
+    }
+
+    private fun scrollToPosition(nextRaceId: Int) {
+        if (!hasScrolled) {
+            binding.rvRaceList.scrollToPosition(nextRaceId)
+            hasScrolled = true
         }
     }
 
@@ -120,7 +132,7 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     }
 
     private fun addItemDecoration() {
-        val decorationHeight = resources.getDimensionPixelSize(R.dimen.list_item_divider_height)
+        val decorationHeight = 1.toPx
         context?.let {
             binding.rvRaceList.addItemDecoration(
                 DividerItemDecoration(
@@ -163,5 +175,13 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val splashScreen = activity?.installSplashScreen()
+        splashScreen?.setKeepOnScreenCondition {
+            viewModel.uiState.value is RaceListFragmentUiState.Loading
+        }
     }
 }
