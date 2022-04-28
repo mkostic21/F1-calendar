@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">F1-calendar</string>
+    <string name="app_name">F1 Calendar</string>
     <string name="action_read_more">Read More</string>
     <string name="action_pick_season">Pick Season</string>
     <string name="season_pick_app_bar_title">Season Select</string>

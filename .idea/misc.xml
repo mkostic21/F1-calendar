@@ -7,6 +7,8 @@
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.1985" />
         <entry key="app/src/main/res/drawable/ic_fab_accept_24.xml" value="0.2075" />
         <entry key="app/src/main/res/drawable/ic_fab_confirm_24.xml" value="0.1505" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.169" />
+        <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_splash.xml" value="0.1985" />
         <entry key="app/src/main/res/drawable/ic_splash_old_versions.xml" value="0.1985" />
         <entry key="app/src/main/res/drawable/splash_image_old_versions.xml" value="0.1985" />
@@ -19,6 +21,7 @@
         <entry key="app/src/main/res/layout/list_item_header.xml" value="0.25" />
         <entry key="app/src/main/res/menu/details_top_app_bar.xml" value="0.31614583333333335" />
         <entry key="app/src/main/res/menu/race_list_top_app_bar.xml" value="0.25" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1745" />
       </map>
     </option>
   </component>
