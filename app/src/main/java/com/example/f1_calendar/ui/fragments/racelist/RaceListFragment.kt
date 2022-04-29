@@ -93,7 +93,10 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
                     hideProgressBar()
                 }
                 is RaceListFragmentUiState.Loading -> {
-                    Log.d("Response", "Loading...")
+                    Log.d("Response", "Loading... $hasScrolled")
+                    hasScrolled = false
+                    Log.d("Response", "set hasScrolled = $hasScrolled")
+
                     showProgressBar()
                 }
             }
@@ -104,6 +107,7 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         if (!hasScrolled) {
             binding.rvRaceList.scrollToPosition(id)
             hasScrolled = true
+            Log.d("response", "scrolled: hasScrolled = $hasScrolled")
         }
     }
 

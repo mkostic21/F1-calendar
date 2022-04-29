@@ -65,7 +65,6 @@ class RaceListRecyclerViewAdapter(
             TYPE_HEADER -> {
                 val viewData = buildRaceViewData(currentData)
                 val header = viewData as RaceWeekListItem.Header
-//                (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
                 (holder as RaceHeaderViewHolder).bind(data = header, shouldHighlight = header.isNextRace)
 
                 if (viewData.dateTime.year == ZonedDateTime.now().year) {

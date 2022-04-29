@@ -139,6 +139,7 @@ object RaceListFragmentUiStateMapper {
                     }
                 }
             }
+            foundNextRace = false
             nextRaceIndex
         }
     }
