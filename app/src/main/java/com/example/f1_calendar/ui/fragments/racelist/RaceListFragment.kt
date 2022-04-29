@@ -86,7 +86,7 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
                 is RaceListFragmentUiState.Success -> {
                     adapter.submitList(state.listItems)
                     hideProgressBar()
-                    scrollToPosition(state.nextRaceId)
+                    scrollToPosition(id = state.nextRaceId)
                 }
                 is RaceListFragmentUiState.Error -> {
                     Log.d("Response", state.t.toString())
@@ -100,9 +100,9 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         }
     }
 
-    private fun scrollToPosition(nextRaceId: Int) {
+    private fun scrollToPosition(id: Int) {
         if (!hasScrolled) {
-            binding.rvRaceList.scrollToPosition(nextRaceId)
+            binding.rvRaceList.scrollToPosition(id)
             hasScrolled = true
         }
     }
@@ -175,5 +175,4 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         super.onDestroyView()
         _binding = null
     }
-
 }

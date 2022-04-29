@@ -11,6 +11,7 @@ import com.example.f1_calendar.util.SchedulerProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +31,7 @@ class RaceListViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
 
     init {
-        fetchUiState("2022")
+        fetchUiState(season = ZonedDateTime.now().year.toString())
     }
 
     override fun onCleared() {

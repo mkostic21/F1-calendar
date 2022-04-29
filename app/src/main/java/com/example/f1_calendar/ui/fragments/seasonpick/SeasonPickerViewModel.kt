@@ -8,11 +8,12 @@ import com.example.f1_calendar.model.ui.seasonpick.SeasonPickFragmentUiState
 import com.example.f1_calendar.util.Constants.Companion.NUMBER_PICKER_MAX_VALUE
 import com.example.f1_calendar.util.Constants.Companion.NUMBER_PICKER_MIN_VALUE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class SeasonPickerViewModel @Inject constructor(): ViewModel(), SelectedSeasonProvider {
-    private val _season = MutableLiveData("2022")
+    private val _season = MutableLiveData(ZonedDateTime.now().year.toString())
     override val season: LiveData<String> get() = _season
 
     private val _uiState = MutableLiveData<SeasonPickFragmentUiState>()

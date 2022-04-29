@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/list_item_padding">
+    android:padding="@dimen/list_item_padding"
+    style="@style/CustomHeaderItemStyle">
 
     <TextView
         android:id="@+id/event_event_type"

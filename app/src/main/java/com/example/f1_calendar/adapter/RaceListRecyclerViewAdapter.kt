@@ -3,6 +3,7 @@ package com.example.f1_calendar.adapter
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,6 +14,7 @@ import com.example.f1_calendar.model.ui.racelist.RaceWeekListItem
 import com.example.f1_calendar.ui.fragments.racelist.OnEventItemSelectedListener
 import com.example.f1_calendar.ui.fragments.racelist.OnHeaderItemSelectedListener
 import java.time.LocalTime
+import java.time.ZonedDateTime
 
 class RaceListRecyclerViewAdapter(
     private val onHeaderItemSelectedListener: OnHeaderItemSelectedListener,
@@ -43,7 +45,13 @@ class RaceListRecyclerViewAdapter(
                 RaceHeaderViewHolder(ListItemHeaderBinding.inflate(layoutInflater, parent, false))
             }
             TYPE_EVENT -> {
-                RaceEventViewHolder(ListItemEventBinding.inflate(layoutInflater, parent, false))
+                RaceEventViewHolder(
+                    ListItemEventBinding.inflate(
+                        layoutInflater,
+                        parent,
+                        false
+                    )
+                )
             }
             else -> {
                 throw IllegalStateException("No ViewHolder defined for type $viewType.")
@@ -56,9 +64,11 @@ class RaceListRecyclerViewAdapter(
         when (holder.itemViewType) {
             TYPE_HEADER -> {
                 val viewData = buildRaceViewData(currentData)
-                (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
+                val header = viewData as RaceWeekListItem.Header
+//                (holder as RaceHeaderViewHolder).bind(data = viewData as RaceWeekListItem.Header)
+                (holder as RaceHeaderViewHolder).bind(data = header, shouldHighlight = header.isNextRace)
 
-                if(viewData.dateTime.year == 2022){
+                if (viewData.dateTime.year == ZonedDateTime.now().year) {
                     holder.itemView.setOnClickListener {
                         Log.d("response", "onBindViewHolder: pressed on position: $position")
                         onHeaderItemSelectedListener.toggleHeader(header = viewData)
@@ -90,7 +100,6 @@ class RaceListRecyclerViewAdapter(
         }
     }
 
-
     private class DiffCallBack : DiffUtil.ItemCallback<RaceWeekListItem>() {
         override fun areContentsTheSame(
             oldItem: RaceWeekListItem,
@@ -110,8 +119,9 @@ class RaceListRecyclerViewAdapter(
 
 class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(data: RaceWeekListItem.Header) {
+    fun bind(data: RaceWeekListItem.Header, shouldHighlight: Boolean) {
         binding.run {
+            headerChipNext.visibility = View.GONE
             headerEventType.text = data.raceName
             headerCircuitName.text = data.circuitName
 
@@ -130,10 +140,13 @@ class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
                 )
             }
 
+            if (shouldHighlight) {
+                binding.headerChipNext.visibility = View.VISIBLE
+            }
         }
     }
-
 }
+
 
 class RaceEventViewHolder(private val binding: ListItemEventBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -153,7 +166,6 @@ class RaceEventViewHolder(private val binding: ListItemEventBinding) :
                 binding.root.context,
                 millis, DateUtils.FORMAT_SHOW_TIME
             )
-
         }
     }
 }
