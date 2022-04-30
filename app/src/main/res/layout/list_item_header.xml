@@ -2,16 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ThemeOverlay.Header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/list_item_padding"
-    style="@style/ThemeOverlay.Header">
+    android:padding="@dimen/list_item_padding">
 
     <TextView
         android:id="@+id/header_event_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
+        android:textSize="@dimen/header_event_title_font_size"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -20,23 +20,24 @@
 
     <com.google.android.material.chip.Chip
         android:id="@+id/header_chip_next"
+        style="@style/CustomChipStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/Widget.Material3.Chip.Filter"
+        android:clickable="false"
+        android:shadowColor="@android:color/transparent"
         android:text="@string/header_chip_next"
         android:textColor="@color/design_default_color_on_primary"
-        android:clickable="false"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="@android:color/transparent"
-        android:shadowColor="@android:color/transparent"
-        style="@style/CustomChipStyle"/>
+        app:shapeAppearanceOverlay="@style/Widget.Material3.Chip.Filter" />
 
     <TextView
         android:id="@+id/header_circuit_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/list_item_margin"
+        android:textSize="@dimen/header_ciruit_name_font_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_event_type"
         tools:text="Circuit de Barcelona-Catalunya " />
@@ -46,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/list_item_margin"
-        android:textSize="18sp"
+        android:textSize="@dimen/header_event_date_font_size"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_event_type"
@@ -56,7 +57,7 @@
         android:id="@+id/header_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="@dimen/header_event_time_font_size"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_date"
