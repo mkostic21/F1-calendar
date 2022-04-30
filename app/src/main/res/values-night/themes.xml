@@ -13,5 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/black</item>
         <!-- Customize your theme here. -->
         <item name="toolbarStyle">@style/MyActionBarTheme</item>
+        <item name="fontFamily">@font/formula1</item>
+        <item name="android:fontFamily">@font/formula1</item>
     </style>
 </resources>

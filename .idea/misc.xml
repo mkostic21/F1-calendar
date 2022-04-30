@@ -13,6 +13,8 @@
         <entry key="app/src/main/res/drawable/ic_splash.xml" value="0.1985" />
         <entry key="app/src/main/res/drawable/ic_splash_old_versions.xml" value="0.1985" />
         <entry key="app/src/main/res/drawable/splash_image_old_versions.xml" value="0.1985" />
+        <entry key="app/src/main/res/font/f1.xml" value="0.19010416666666666" />
+        <entry key="app/src/main/res/font/formula1.xml" value="0.34102564102564104" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_race_list.xml" value="0.15989583333333332" />

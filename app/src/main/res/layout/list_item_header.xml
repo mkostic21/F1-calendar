@@ -9,13 +9,15 @@
 
     <TextView
         android:id="@+id/header_event_type"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/header_event_title_font_size"
         android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/title_start_guideline"
+        app:layout_constraintEnd_toStartOf="@id/title_end_guideline"
         app:layout_constraintTop_toTopOf="parent"
+        android:maxLines="2"
         tools:text="Spanish Grand Prix" />
 
     <com.google.android.material.chip.Chip
@@ -26,30 +28,37 @@
         android:clickable="false"
         android:shadowColor="@android:color/transparent"
         android:text="@string/header_chip_next"
-        android:textColor="@color/design_default_color_on_primary"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/header_date"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="@android:color/transparent"
         app:shapeAppearanceOverlay="@style/Widget.Material3.Chip.Filter" />
 
     <TextView
         android:id="@+id/header_circuit_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/list_item_margin"
+        android:breakStrategy="high_quality"
+        android:maxLines="2"
         android:textSize="@dimen/header_ciruit_name_font_size"
+        app:layout_constraintEnd_toStartOf="@id/center_guideline"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_event_type"
-        tools:text="Circuit de Barcelona-Catalunya " />
+        tools:text="Circuit de Catalunya" />
 
     <TextView
         android:id="@+id/header_date"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/list_item_margin"
-        android:textSize="@dimen/header_event_date_font_size"
+        android:gravity="end"
+        android:textSize="@dimen/event_date_font_size"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toStartOf="@id/center_guideline"
         app:layout_constraintTop_toBottomOf="@id/header_event_type"
         tools:text="12.12.2012." />
 
@@ -57,11 +66,30 @@
         android:id="@+id/header_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/header_event_time_font_size"
+        android:textSize="@dimen/event_time_font_size"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_date"
         tools:text="12:00" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/center_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/title_start_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/title_end_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
