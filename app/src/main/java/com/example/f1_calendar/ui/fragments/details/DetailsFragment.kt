@@ -89,7 +89,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                     binding.run {
                         map.visibility = View.GONE
                         tvEmpty.visibility = View.VISIBLE
-                        tvEmpty.text = resources.getString(R.string.details_error)
                     }
                 }
             }

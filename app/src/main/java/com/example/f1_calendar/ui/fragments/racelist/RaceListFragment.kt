@@ -90,13 +90,15 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
                 }
                 is RaceListFragmentUiState.Error -> {
                     Log.d("Response", state.t.toString())
+                    binding.rvRaceList.visibility = View.GONE
+                    binding.tvEmpty.visibility = View.VISIBLE
                     hideProgressBar()
                 }
                 is RaceListFragmentUiState.Loading -> {
                     Log.d("Response", "Loading... $hasScrolled")
                     hasScrolled = false
-                    Log.d("Response", "set hasScrolled = $hasScrolled")
-
+                    binding.rvRaceList.visibility = View.VISIBLE
+                    binding.tvEmpty.visibility = View.GONE
                     showProgressBar()
                 }
             }
@@ -105,9 +107,8 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
 
     private fun scrollToPosition(id: Int) {
         if (!hasScrolled) {
-            binding.rvRaceList.scrollToPosition(id)
+            binding.rvRaceList.smoothScrollToPosition(id)
             hasScrolled = true
-            Log.d("response", "scrolled: hasScrolled = $hasScrolled")
         }
     }
 
@@ -129,8 +130,8 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
 
     private fun setupRecyclerView() {
         binding.rvRaceList.adapter = adapter
-        binding.rvRaceList.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.rvRaceList.layoutManager = layoutManager
         addItemDecoration()
     }
 

@@ -4,6 +4,6 @@
     <dimen name="list_item_margin">12dp</dimen>
     <dimen name="header_event_title_font_size">20sp</dimen>
     <dimen name="event_time_font_size">14sp</dimen>
-    <dimen name="event_date_font_size">16sp</dimen>
+    <dimen name="event_date_font_size">15sp</dimen>
     <dimen name="header_ciruit_name_font_size">15sp</dimen>
 </resources>

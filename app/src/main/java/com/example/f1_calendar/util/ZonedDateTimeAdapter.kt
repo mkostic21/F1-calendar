@@ -1,6 +1,5 @@
 package com.example.f1_calendar.util
 
-import android.util.Log
 import androidx.room.ProvidedTypeConverter
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
@@ -16,7 +15,6 @@ class ZonedDateTimeAdapter : TypeAdapter<ZonedDateTime>() {
         }
         val jsonString = value.toString()
         out?.value(jsonString)
-        Log.d("response", "write: $jsonString")
     }
 
     override fun read(`in`: JsonReader?): ZonedDateTime {

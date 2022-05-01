@@ -27,6 +27,7 @@
         android:id="@+id/tv_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/details_error"
         app:layout_constraintTop_toTopOf="@id/details_top_app_bar_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
