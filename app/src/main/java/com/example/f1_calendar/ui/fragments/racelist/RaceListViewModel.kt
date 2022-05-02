@@ -65,7 +65,14 @@ class RaceListViewModel @Inject constructor(
             currentList = editableList
         }
 
-        _uiState.value = RaceListFragmentUiState.Success(listItems = currentList, nextRaceId = nextRaceId)
+        _uiState.value =
+            RaceListFragmentUiState.Success(listItems = currentList, nextRaceId = nextRaceId)
+    }
+
+    fun retryFetchingUiState(){
+        val retrySeason = currentSeason
+        currentSeason = "" //currentSeason must be != retrySeason to fetch new UI state
+        fetchUiState(season = retrySeason)
     }
 
     fun fetchUiState(season: String) {
@@ -88,7 +95,10 @@ class RaceListViewModel @Inject constructor(
                     )
                     RaceListFragmentUiState.Success(
                         listItems = currentList,
-                        nextRaceId = RaceListFragmentUiStateMapper.mapNextRaceId(currentList, currentSeason)
+                        nextRaceId = RaceListFragmentUiStateMapper.mapNextRaceId(
+                            currentList,
+                            currentSeason
+                        )
                     )
                 }
                 .observeOn(schedulerProvider.main)

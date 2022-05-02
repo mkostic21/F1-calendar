@@ -6,13 +6,10 @@ import android.net.NetworkCapabilities.*
 import android.util.Log
 import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.model.domain.Circuit
-import com.example.f1_calendar.model.domain.Location
-import com.example.f1_calendar.model.domain.Race
 import com.example.f1_calendar.model.domain.RaceTable
 import com.example.f1_calendar.room.RaceTableDao
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
-import java.time.ZonedDateTime
 import javax.inject.Inject
 
 
@@ -66,7 +63,7 @@ class F1ApiRaceTableRepository @Inject constructor(
                 roomDatabase.insertRaceTable(raceTable = raceTable).toSingleDefault(raceTable)
             }
         } else {
-            Single.error(RacesEmptyException())
+            Single.error(NoInternetConnectionException())
         }
     }
 
@@ -101,3 +98,5 @@ class F1ApiRaceTableRepository @Inject constructor(
 }
 
 private class RacesEmptyException : RuntimeException()
+
+private class NoInternetConnectionException : RuntimeException()

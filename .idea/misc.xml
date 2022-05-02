@@ -17,7 +17,7 @@
         <entry key="app/src/main/res/font/formula1.xml" value="0.34102564102564104" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/fragment_race_list.xml" value="0.15989583333333332" />
+        <entry key="app/src/main/res/layout/fragment_race_list.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_season_pick.xml" value="0.25226449275362317" />
         <entry key="app/src/main/res/layout/item_race_list_header.xml" value="0.25" />
         <entry key="app/src/main/res/layout/list_item_event.xml" value="0.25" />

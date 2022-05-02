@@ -61,6 +61,14 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         setupRecyclerView()
         setupViewModelObserver()
         setupPickerViewModelObserver()
+        setupRetryButton()
+    }
+
+    private fun setupRetryButton() {
+        binding.btnRetry.setOnClickListener {
+            Log.d("response", "retryButton pressed!")
+            viewModel.retryFetchingUiState()
+        }
     }
 
     private fun setupAppBar() {
@@ -90,19 +98,31 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
                 }
                 is RaceListFragmentUiState.Error -> {
                     Log.d("Response", state.t.toString())
-                    binding.rvRaceList.visibility = View.GONE
-                    binding.tvEmpty.visibility = View.VISIBLE
+                    showNetworkError()
                     hideProgressBar()
                 }
                 is RaceListFragmentUiState.Loading -> {
-                    Log.d("Response", "Loading... $hasScrolled")
-                    hasScrolled = false
-                    binding.rvRaceList.visibility = View.VISIBLE
-                    binding.tvEmpty.visibility = View.GONE
+                    Log.d("Response", "Loading...")
+                    hideNetworkError()
                     showProgressBar()
+                    hasScrolled = false
                 }
             }
         }
+    }
+
+    private fun hideNetworkError() {
+        Log.d("Response", "Hiding network error")
+        binding.rvRaceList.visibility = View.VISIBLE
+        binding.tvEmpty.visibility = View.GONE
+        binding.btnRetry.visibility = View.GONE
+    }
+
+    private fun showNetworkError() {
+        Log.d("Response", "Showing network error")
+        binding.rvRaceList.visibility = View.GONE
+        binding.tvEmpty.visibility = View.VISIBLE
+        binding.btnRetry.visibility = View.VISIBLE
     }
 
     private fun scrollToPosition(id: Int) {

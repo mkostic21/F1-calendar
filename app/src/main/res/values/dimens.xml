@@ -6,4 +6,5 @@
     <dimen name="event_time_font_size">14sp</dimen>
     <dimen name="event_date_font_size">15sp</dimen>
     <dimen name="header_ciruit_name_font_size">15sp</dimen>
+    <dimen name="error_message_font_size">18sp</dimen>
 </resources>
