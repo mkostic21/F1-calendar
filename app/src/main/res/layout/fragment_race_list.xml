@@ -31,6 +31,12 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_empty_views"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_empty, btn_retry"
+        />
     <TextView
         android:id="@+id/tv_empty"
         android:layout_width="0dp"
@@ -49,7 +55,7 @@
         android:id="@+id/btn_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="retry"
+        android:text="@string/btn_retry_text"
         android:visibility="gone"
         app:layout_constraintVertical_bias="0.25"
         app:layout_constraintBottom_toBottomOf="parent"

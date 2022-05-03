@@ -1,13 +1,11 @@
 package com.example.f1_calendar.domain
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities.*
 import android.util.Log
 import com.example.f1_calendar.api.F1Api
 import com.example.f1_calendar.model.domain.Circuit
 import com.example.f1_calendar.model.domain.RaceTable
 import com.example.f1_calendar.room.RaceTableDao
+import com.example.f1_calendar.util.InternetConnectionHandler
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
@@ -16,7 +14,7 @@ import javax.inject.Inject
 class F1ApiRaceTableRepository @Inject constructor(
     private val f1Api: F1Api,
     private val roomDatabase: RaceTableDao,
-    private val context: Context
+    private val connectionHandler: InternetConnectionHandler
 ) : RaceTableRepository {
     override fun getRaceTable(season: String): Single<RaceTable> {
         return getRacesFromDatabase(season = season)
@@ -26,8 +24,8 @@ class F1ApiRaceTableRepository @Inject constructor(
                     throw RacesEmptyException()
                 }
             }
-            .onErrorResumeNext {
-                Log.d("response", "getRaceTableError: ${it.localizedMessage}")
+            .onErrorResumeNext { error ->
+                Log.d("response", "getRaceTableError: ${error.localizedMessage}")
                 fetchFromApiAndSaveToDb(season = season)
             }
     }
@@ -51,7 +49,7 @@ class F1ApiRaceTableRepository @Inject constructor(
     }
 
     private fun fetchFromApiAndSaveToDb(season: String): Single<RaceTable> {
-        return if (hasInternetConnection(context = context)) {
+        return if (connectionHandler.hasInternetConnection()) {
             f1Api.getSeasonData(season = season).map { response ->
                 Log.d("response", "fetchFromApi: $response")
                 RaceTable(
@@ -67,33 +65,6 @@ class F1ApiRaceTableRepository @Inject constructor(
         }
     }
 
-    private fun hasInternetConnection(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        val capabilities =
-            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        if (capabilities != null) {
-            return when {
-                capabilities.hasTransport(TRANSPORT_WIFI) -> {
-                    Log.i("response", "NetworkCapabilities.TRANSPORT_WIFI")
-                    true
-                }
-                capabilities.hasTransport(TRANSPORT_CELLULAR) -> {
-                    Log.i("response", "NetworkCapabilities.TRANSPORT_CELLULAR")
-                    true
-                }
-                capabilities.hasTransport(TRANSPORT_ETHERNET) -> {
-                    Log.i("response", "NetworkCapabilities.TRANSPORT_ETHERNET")
-                    true
-                }
-                else -> {
-                    false
-                }
-            }
-        }
-        return false
-    }
 
 }
 

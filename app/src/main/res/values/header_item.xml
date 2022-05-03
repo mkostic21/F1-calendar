@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="CustomHeaderItemStyle">
-        <item name="android:background">@color/light_gray_background</item>
+        <item name="android:background">@color/cultured</item>
     </style>
     <style name="CustomHeaderItemTextStyle" parent="TextAppearance.AppCompat">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/dark_gray_text</item>
+        <item name="android:textColor">@color/sonic_silver</item>
     </style>
 </resources>

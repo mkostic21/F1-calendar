@@ -7,4 +7,5 @@
     <string name="details_error">Could not load circuit information</string>
     <string name="network_error">Could not fetch data, check your Internet connection and try again</string>
     <string name="header_chip_next">NEXT</string>
+    <string name="btn_retry_text">retry</string>
 </resources>

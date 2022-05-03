@@ -2,18 +2,17 @@
     <!-- Base application theme. -->
     <style name="Theme.F1calendar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/red_f1</item>
-        <item name="colorPrimaryVariant">@color/red_f1_darker</item>
+        <item name="colorPrimary">@color/maximum_red</item>
+        <item name="colorPrimaryVariant">@color/carnelian</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/red_f1</item>
-        <item name="colorSecondaryVariant">@color/red_f1_darker</item>
+        <item name="colorSecondary">@color/maximum_red</item>
+        <item name="colorSecondaryVariant">@color/carnelian</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="toolbarStyle">@style/MyActionBarTheme</item>
-        <item name="fontFamily">@font/formula1</item>
-        <item name="android:fontFamily">@font/formula1</item>
+        <item name="fontFamily">@font/formula1_regular</item>
+        <item name="android:fontFamily">@font/formula1_regular</item>
     </style>
 </resources>

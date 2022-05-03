@@ -30,8 +30,6 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     private var _binding: FragmentRaceListBinding? = null
     private val binding get() = _binding!!
 
-    private var hasScrolled = false
-
     private val adapter: RaceListRecyclerViewAdapter by lazy {
         val headerItemListener = getOnHeaderItemSelectedListener()
         val eventItemListener = getOnEventItemSelectedListener()
@@ -61,13 +59,14 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         setupRecyclerView()
         setupViewModelObserver()
         setupPickerViewModelObserver()
+        setupNextRaceIdObserver()
         setupRetryButton()
     }
 
     private fun setupRetryButton() {
         binding.btnRetry.setOnClickListener {
             Log.d("response", "retryButton pressed!")
-            viewModel.retryFetchingUiState()
+            viewModel.fetchUiState(season = seasonProvider.season.value!!)
         }
     }
 
@@ -92,9 +91,11 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is RaceListFragmentUiState.Success -> {
+                    Log.d("response", state.toString())
                     adapter.submitList(state.listItems)
                     hideProgressBar()
-                    scrollToPosition(id = state.nextRaceId)
+                    hideNetworkError()
+                    binding.rvRaceList.visibility = View.VISIBLE
                 }
                 is RaceListFragmentUiState.Error -> {
                     Log.d("Response", state.t.toString())
@@ -105,7 +106,6 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
                     Log.d("Response", "Loading...")
                     hideNetworkError()
                     showProgressBar()
-                    hasScrolled = false
                 }
             }
         }
@@ -114,21 +114,21 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     private fun hideNetworkError() {
         Log.d("Response", "Hiding network error")
         binding.rvRaceList.visibility = View.VISIBLE
-        binding.tvEmpty.visibility = View.GONE
-        binding.btnRetry.visibility = View.GONE
+        binding.groupEmptyViews.visibility = View.GONE
     }
 
     private fun showNetworkError() {
         Log.d("Response", "Showing network error")
         binding.rvRaceList.visibility = View.GONE
-        binding.tvEmpty.visibility = View.VISIBLE
-        binding.btnRetry.visibility = View.VISIBLE
+        binding.groupEmptyViews.visibility = View.VISIBLE
     }
 
-    private fun scrollToPosition(id: Int) {
-        if (!hasScrolled) {
-            binding.rvRaceList.smoothScrollToPosition(id)
-            hasScrolled = true
+    private fun setupNextRaceIdObserver(){
+        viewModel.nextRaceId.observe(viewLifecycleOwner){ id ->
+            if(viewModel.shouldScroll()){
+                binding.rvRaceList.smoothScrollToPosition(id)
+                Log.d("response", "scrolled to id: $id")
+            }
         }
     }
 
@@ -141,6 +141,7 @@ class RaceListFragment : Fragment(R.layout.fragment_race_list) {
     private fun showProgressBar() {
         Log.d("Response", "Showing progressbar")
         binding.progressCircular.visibility = View.VISIBLE
+        binding.rvRaceList.visibility = View.GONE
     }
 
     private fun hideProgressBar() {

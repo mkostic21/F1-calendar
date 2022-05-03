@@ -65,7 +65,10 @@ class RaceListRecyclerViewAdapter(
             TYPE_HEADER -> {
                 val viewData = buildRaceViewData(currentData)
                 val header = viewData as RaceWeekListItem.Header
-                (holder as RaceHeaderViewHolder).bind(data = header, shouldHighlight = header.isNextRace)
+                (holder as RaceHeaderViewHolder).bind(
+                    data = header,
+                    shouldHighlight = header.isNextRace
+                )
 
                 if (viewData.dateTime.year == ZonedDateTime.now().year) {
                     holder.itemView.setOnClickListener {
@@ -120,7 +123,7 @@ class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(data: RaceWeekListItem.Header, shouldHighlight: Boolean) {
         binding.run {
-            headerChipNext.visibility = View.GONE
+            tvNext.visibility = View.GONE
             headerEventType.text = data.raceName
             headerCircuitName.text = data.circuitName
 
@@ -140,7 +143,7 @@ class RaceHeaderViewHolder(private val binding: ListItemHeaderBinding) :
             }
 
             if (shouldHighlight) {
-                binding.headerChipNext.visibility = View.VISIBLE
+                binding.tvNext.visibility = View.VISIBLE
             }
         }
     }

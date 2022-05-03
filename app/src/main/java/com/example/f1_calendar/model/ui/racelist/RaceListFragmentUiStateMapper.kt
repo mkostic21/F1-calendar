@@ -6,10 +6,9 @@ import java.time.ZonedDateTime
 import java.util.*
 
 object RaceListFragmentUiStateMapper {
-    private var foundNextRace = false
-
     fun mapRaceWeekList(raceTable: RaceTable): MutableList<RaceWeekListItem> {
         val raceWeekList = mutableListOf<RaceWeekListItem>()
+        val nextRaceDate = mapNextRaceDate(raceTable = raceTable)
         for (race in raceTable.races) {
             raceWeekList.add(
                 RaceWeekListItem.Header(
@@ -19,7 +18,7 @@ object RaceListFragmentUiStateMapper {
                     dateTime = race.dateTime,
                     circuitId = race.circuit.circuitId,
                     id = UUID.randomUUID().toString(),
-                    isNextRace =  mapIsNextRace(race.dateTime)
+                    isNextRace = mapIsNextRace(next = nextRaceDate, current = race.dateTime)
                 )
             )
             //if practice is missing or if practice doesn't have time to show -> add only HEADER items
@@ -115,7 +114,7 @@ object RaceListFragmentUiStateMapper {
             for (item in currentList) {
                 if (item is RaceWeekListItem.Header) {
                     collapsedHeaderIds[item.id] = true
-                    if (!foundNextRace && item.dateTime.isAfter(currentDate)){
+                    if (!foundNextRace && item.dateTime.isAfter(currentDate)) {
                         collapsedHeaderIds[item.id] = false
                         foundNextRace = true
                     }
@@ -125,32 +124,32 @@ object RaceListFragmentUiStateMapper {
         return collapsedHeaderIds
     }
 
-    fun mapNextRaceId(raceList: List<RaceWeekListItem>, season: String) : Int {
-        return if(season != ZonedDateTime.now().year.toString()){
+    fun mapNextRaceId(raceList: List<RaceWeekListItem>, season: String): Int {
+        val currentDate = ZonedDateTime.now()
+        return if (season != currentDate.year.toString()) {
             0
         } else {
-            val currentDate = ZonedDateTime.now()
-            var nextRaceIndex = 0
-            for (item in raceList) {
-                if(item is RaceWeekListItem.Header){
-                    if(item.dateTime.isAfter(currentDate)){
-                        nextRaceIndex = raceList.indexOf(item)
-                        break
-                    }
-                }
+            raceList.indexOfFirst { raceEvent ->
+                raceEvent is RaceWeekListItem.Header && raceEvent.dateTime.isAfter(currentDate)
             }
-            foundNextRace = false
-            nextRaceIndex
         }
     }
 
-    private fun mapIsNextRace(raceDate: ZonedDateTime):Boolean{
+    private fun mapNextRaceDate(raceTable: RaceTable): ZonedDateTime? {
         val currentDate = ZonedDateTime.now()
-        return if(!foundNextRace && raceDate.isAfter(currentDate)){
-            foundNextRace = true
-            true
+        return if(raceTable.season != currentDate.year.toString()){
+            null
         } else {
-            false
+            val nextRace = raceTable.races.first { race ->
+                race.dateTime.isAfter(currentDate)
+            }
+            nextRace.dateTime
         }
+
     }
+
+    private fun mapIsNextRace(next: ZonedDateTime?, current: ZonedDateTime): Boolean {
+        return next != null && next == current
+    }
+
 }

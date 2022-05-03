@@ -20,19 +20,18 @@
         android:maxLines="2"
         tools:text="Spanish Grand Prix" />
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/header_chip_next"
-        style="@style/CustomChipStyle"
+    <TextView
+        android:id="@+id/tv_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="false"
-        android:shadowColor="@android:color/transparent"
         android:text="@string/header_chip_next"
-        app:layout_constraintBottom_toTopOf="@id/header_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:rippleColor="@android:color/transparent"
-        app:shapeAppearanceOverlay="@style/Widget.Material3.Chip.Filter" />
+        android:background="@drawable/rounder_corners"
+        android:padding="6dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/formula1_regular"
+        android:textSize="12sp"/>
 
     <TextView
         android:id="@+id/header_circuit_name"
